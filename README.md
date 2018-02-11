@@ -1,5 +1,7 @@
 # Introduction
 
+Note: This is considered slightly beta because of [this bug](https://github.com/slipo/neo-scan-docker/issues/1). I'm not sure if that's only in my Kubernetes setup or if others will experience it.
+
 This contains Docker files and related configuration files for a container of [neo-scan](https://github.com/CityOfZion/neo-scan).
 
 `Dockerfile` is what is used to build [the docker container](https://hub.docker.com/r/slipoh/neo-scan/) found on Docker Hub.
