@@ -26,7 +26,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
   neo-privnet:
-    image: metachris/neo-privnet-with-gas
+    image: cityofzion/neo-privatenet
     container_name: "neo-privnet"
     ports:
       - 20333:20333
