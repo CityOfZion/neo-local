@@ -33,6 +33,8 @@ services:
       - neo-nodes:20335
       - neo-nodes:20336
     tty: true
+    volumes:
+      - ./smart-contracts:/smart-contracts
   neo-scan:
     build: ./neo-scan
     container_name: "neo-scan2"
