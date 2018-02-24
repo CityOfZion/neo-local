@@ -14,6 +14,8 @@
 - There are multiple services required to get this working.
 - This repo uses [Docker Compose](https://docs.docker.com/compose/) to package and run all of the services.
 
+![image](https://user-images.githubusercontent.com/2796074/36632958-9247f8ba-198d-11e8-8055-f096141902d9.png)
+
 ## Usage
 
 Install [Docker Compose](https://docs.docker.com/compose/), then run:
