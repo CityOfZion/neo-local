@@ -1,18 +1,15 @@
 DEFAULT: start
 
 start:
-	@./scripts/print.sh "Starting Docker containers..."
-	@docker-compose up -d > /dev/null
-	@./scripts/print.sh "Waiting for network..." false
+	@./scripts/print.sh prefix "Starting Docker containers..."
+	@docker-compose up -d --build --remove-orphans --force-recreate > /dev/null
+	@./scripts/print.sh prefix "Waiting for network..." false
 	@./scripts/ping.sh
-	@./scripts/print.sh "Done 🎉"
-
-start-verbose:
-	@./scripts/print.sh "Starting Docker containers..."
-	docker-compose up -d
-	@./scripts/print.sh "Waiting for network..." false
-	@./scripts/ping.sh
-	@./scripts/print.sh "Done 🎉"
+	@./scripts/print.sh prefix "Network running!"
+	@./scripts/print.sh prefix "Attaching terminal to neo-python client\n"
+	@./scripts/print.sh grey "Enable logging:\t\t\t config sc-events on"
+	@./scripts/print.sh grey "Open wallet (password: 'coz'):\t open wallet ./neo-privnet.wallet\n"
+	@docker exec -it neo-python python prompt.py -p
 
 stop:
 	@./scripts/print.sh "Stopping Docker containers..."

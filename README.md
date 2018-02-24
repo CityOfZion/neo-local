@@ -28,20 +28,13 @@ To stop:
 make stop
 ```
 
-## Errors
-
-If you encounter an error, use the following command for verbose output:
-
-```
-make start-verbose
-```
-
 ## Components
 
 The [Docker Compose](https://docs.docker.com/compose/) stack is made up of the following 
 services:
 
 - [neo-privatenet](https://hub.docker.com/r/cityofzion/neo-privatenet/) (consensus nodes)
+- [neo-python](https://github.com/CityOfZion/neo-python) (development CLI)
 - [neo-scan](https://github.com/CityOfZion/neo-scan) (block explorer)
 - [postgres](https://hub.docker.com/_/postgres/) (database for neo-scan)
 

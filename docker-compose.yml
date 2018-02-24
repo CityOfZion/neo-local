@@ -20,6 +20,19 @@ services:
       - "30334"
       - "30335"
       - "30336"
+  neo-python:
+    build: ./neo-python
+    container_name: "neo-python"
+    depends_on:
+      - db
+      - neo-nodes
+      - neo-scan
+    links:
+      - neo-nodes:20333
+      - neo-nodes:20334
+      - neo-nodes:20335
+      - neo-nodes:20336
+    tty: true
   neo-scan:
     build: ./neo-scan
     container_name: "neo-scan2"
@@ -32,10 +45,6 @@ services:
       POSTGRES_HOSTNAME: db
     links:
       - db
-      - neo-nodes:20333
-      - neo-nodes:20334
-      - neo-nodes:20335
-      - neo-nodes:20336
       - neo-nodes:30333
       - neo-nodes:30334
       - neo-nodes:30335
