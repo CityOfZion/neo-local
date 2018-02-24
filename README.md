@@ -1,39 +1,52 @@
-# Introduction
+<p align="center">
+  <img src="https://raw.githubusercontent.com/neoauth/design-assets/master/logo/colour/neoauth_color.png" width="150px" /> 
+</p>
 
-This contains Docker files and related configuration files for a container of [neo-scan](https://github.com/CityOfZion/neo-scan).
+<h1 align="center">neo-local</h1>
 
-`Dockerfile` is what is used to build [the docker container](https://hub.docker.com/r/slipoh/neo-scan/) found on Docker Hub.
+<p align="center">
+  Start a <b>local</b> NEO blockchain with a <b>single</b> command.
+</p>
 
-`docker-compose.yml` is a a fully working private network with neo-scan connected to it. It uses prebuilt images.
+## What?
 
-# Privnet with GAS and with neo-scan — quick start
+- Writing smart contracts requires a local version of the NEO blockchain to be running.
+- There are multiple services required to get this working.
+- This repo uses [Docker Compose](https://docs.docker.com/compose/) to package and run all of the services.
 
-Note: This is a complete solution. It expects you're not already running the privnet docker image. It will set up a new one. You may need to remove your currently running docker privnet image if you already have one.
+## Usage
 
-It uses the prebuilt [neo-privnet-with-gas](https://hub.docker.com/r/metachris/neo-privnet-with-gas/]) and [neo-scan](https://hub.docker.com/r/slipoh/neo-scan/) images.
+Install [Docker Compose](https://docs.docker.com/compose/), then run:
 
-We assuming you have Docker all set up.
-
-Pull the repo down and `cd` into it
 ```
-git clone git@github.com:slipo/neo-scan-docker.git
-cd neo-scan-docker
-```
-
-Start up the container
-```
-docker-compose up
+make start
 ```
 
-It will take some time to set up.
+To stop:
 
-While you wait, add this line to your hosts file:
 ```
-127.0.0.1 neo-privnet
+make stop
 ```
 
-That allows you to connect to the privnet NEO nodes with the URLs returned by the neo-scan container. If you're using neo-python to connect to the privnet, you can use the standard configuration. 127.0.0.1:30333 will continue to work, for example.
+## Errors
 
-OK, if you waited a few minutes, it should be ready. Check: http://localhost:4000/. You should see neo-scan with some blocks.
+If you encounter an error, use the following command for verbose output:
 
-For information about the privnet setup, including the keys to your assets check [the neo-privnet-with-gas documentation](https://hub.docker.com/r/metachris/neo-privnet-with-gas/)
+```
+make start-verbose
+```
+
+## Components
+
+The [Docker Compose](https://docs.docker.com/compose/) stack is made up of the following 
+services:
+
+- [neo-privatenet](https://hub.docker.com/r/cityofzion/neo-privatenet/) (consensus nodes)
+- [neo-scan](https://github.com/CityOfZion/neo-scan) (block explorer)
+- [postgres](https://hub.docker.com/_/postgres/) (database for neo-scan)
+
+## Credit
+
+This is a fork of [@slipo](https://github.com/slipo)'s 
+[neo-scan-docker](https://github.com/slipo/neo-scan-docker) repo!
+

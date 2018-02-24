@@ -11,15 +11,11 @@ WORKDIR /data
 
 RUN git checkout seed-config
 
-# Here are the default environment variables you can override.
-ENV POSTGRES_USERNAME='postgres'
-ENV POSTGRES_PASSWORD='postgres'
 ENV POSTGRES_DATABASE='neoscan_dev'
-ENV POSTGRES_HOSTNAME='postgres'
-ENV NEO_SEED_1="http://neo-privnet:30333"
-ENV NEO_SEED_2="http://neo-privnet:30334"
-ENV NEO_SEED_3="http://neo-privnet:30335"
-ENV NEO_SEED_4="http://neo-privnet:30336"
+ENV NEO_SEED_1="http://neo-nodes:30333"
+ENV NEO_SEED_2="http://neo-nodes:30334"
+ENV NEO_SEED_3="http://neo-nodes:30335"
+ENV NEO_SEED_4="http://neo-nodes:30336"
 
 RUN mix deps.get
 RUN cd apps/neoscan_web/assets && npm install

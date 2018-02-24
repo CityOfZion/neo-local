@@ -1,39 +1,44 @@
 version: "3"
 services:
-  neo-scan:
-    image: slipoh/neo-scan
-    container_name: "neo-scan"
-    ports:
-      - 4000:4000
-    links:
-      - postgresql:postgres
-      - neo-privnet:20333
-      - neo-privnet:20334
-      - neo-privnet:20335
-      - neo-privnet:20336
-      - neo-privnet:30333
-      - neo-privnet:30334
-      - neo-privnet:30335
-      - neo-privnet:30336
-    depends_on:
-      - postgresql
-      - neo-privnet
-  postgresql:
+  db:
+    container_name: "db"
     image: postgres:10.1
-    ports:
-      - 5432:5432
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-  neo-privnet:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    expose:
+      - 5432
+  neo-nodes:
+    container_name: "neo-nodes"
     image: cityofzion/neo-privatenet
-    container_name: "neo-privnet"
     ports:
-      - 20333:20333
-      - 20334:20334
-      - 20335:20335
-      - 20336:20336
-      - 30333:30333
-      - 30334:30334
-      - 30335:30335
-      - 30336:30336
+      - "20333"
+      - "20334"
+      - "20335"
+      - "20336"
+      - "30333"
+      - "30334"
+      - "30335"
+      - "30336"
+  neo-scan:
+    build: ./neo-scan
+    container_name: "neo-scan2"
+    depends_on:
+      - db
+      - neo-nodes
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOSTNAME: db
+    links:
+      - db
+      - neo-nodes:20333
+      - neo-nodes:20334
+      - neo-nodes:20335
+      - neo-nodes:20336
+      - neo-nodes:30333
+      - neo-nodes:30334
+      - neo-nodes:30335
+      - neo-nodes:30336
+    ports:
+      - 4001:4000   
