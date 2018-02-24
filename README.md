@@ -28,6 +28,10 @@ To stop:
 make stop
 ```
 
+## Block Explorer
+
+View what is happening on your local blockchain: [http://localhost:4000](http://localhost:4000)
+
 ## Components
 
 The [Docker Compose](https://docs.docker.com/compose/) stack is made up of the following 
