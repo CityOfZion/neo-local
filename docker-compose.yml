@@ -12,17 +12,17 @@ services:
     container_name: "neo-nodes"
     image: cityofzion/neo-privatenet
     ports:
-      - "20333"
-      - "20334"
-      - "20335"
-      - "20336"
-      - "30333"
-      - "30334"
-      - "30335"
-      - "30336"
+      - "20333:20333"
+      - "20334:20334"
+      - "20335:20335"
+      - "20336:20336"
+      - "30333:30333"
+      - "30334:30334"
+      - "30335:30335"
+      - "30336:30336"
   neo-python:
-    build: ./neo-python
     container_name: "neo-python"
+    image: "cityofzion/neo-python"
     depends_on:
       - db
       - neo-nodes

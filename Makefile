@@ -10,7 +10,7 @@ start:
 	@./scripts/print.sh grey "Enable logging:\t\t\t config sc-events on"
 	@./scripts/print.sh grey "Open wallet (password: 'coz'):\t open wallet ./neo-privnet.wallet"
 	@./scripts/print.sh grey "Test smart contract:\t\t build /smart-contracts/wake_up_neo.py test 07 05 True False main\n"
-	@docker exec -it neo-python python prompt.py -p
+	@docker exec -it neo-python python3 prompt.py -p
 
 stop:
 	@./scripts/print.sh "Stopping Docker containers..."
