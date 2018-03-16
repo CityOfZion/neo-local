@@ -27,11 +27,7 @@ services:
       - db
       - neo-nodes
       - neo-scan
-    links:
-      - neo-nodes:20333
-      - neo-nodes:20334
-      - neo-nodes:20335
-      - neo-nodes:20336
+    network_mode: host
     tty: true
     volumes:
       - ./smart-contracts:/smart-contracts

@@ -2,6 +2,7 @@ FROM nikolauska/phoenix
 LABEL maintainer="NeoAuth <hi@neoauth.org>"
 
 RUN apk update && apk upgrade && \
+    apk add --no-cache nodejs && \
     apk add --no-cache git
 
 # Replace with regular neo-scan after this is merged:
