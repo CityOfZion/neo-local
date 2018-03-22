@@ -1,4 +1,5 @@
 #! /bin/bash
+# Script used to pretty print log messages.
 
 GREEN='\033[1;32m'
 GREY='\033[0;37m'

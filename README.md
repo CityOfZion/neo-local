@@ -8,6 +8,12 @@
   Start a <b>local</b> NEO blockchain with a <b>single</b> command.
 </p>
 
+<p align="center">
+  <a href="https://travis-ci.org/neoauth/neo-local">
+    <img src="https://img.shields.io/travis/neoauth/neo-local/master.svg">
+  </a>
+</p>
+
 ## What?
 
 - Writing smart contracts requires a local version of the NEO blockchain to be running.
