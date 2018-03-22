@@ -1,0 +1,14 @@
+sudo: required
+
+services:
+  - docker
+
+notifications:
+  email:
+    recipients:
+      - revett@cityofzion.io
+    on_success: never
+    on_failure: always
+
+script:
+  make integration-tests

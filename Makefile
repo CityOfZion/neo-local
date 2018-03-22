@@ -1,5 +1,9 @@
 DEFAULT: start
 
+integration-tests: setup-network
+	@./scripts/print.sh prefix "Checking number of running services"
+	@./scripts/status.sh
+
 setup-network:
 	@./scripts/print.sh prefix "Starting Docker containers..."
 	@docker-compose up -d --build --remove-orphans --force-recreate > /dev/null
