@@ -18,6 +18,6 @@ start: setup-network
 	@docker exec -it neo-python np-prompt -p -v
 
 stop:
-	@./scripts/print.sh "Stopping Docker containers..."
+	@./scripts/print.sh prefix "Stopping Docker containers..."
 	@docker-compose down > /dev/null
-	@./scripts/print.sh "Done 🎉"
+	@./scripts/print.sh prefix "Done 🎉"
