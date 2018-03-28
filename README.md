@@ -8,10 +8,7 @@
 <h1 align="center">neo-local</h1>
 
 <p align="center">
-    <a href="https://hub.docker.com/r/cityofzion/neo-privatenet/">neo privatenet</a> + <a href="http://neoscan.io/">neoscan</a> + <a href="https://neo-python.readthedocs.io">neopython</a>
-</p>
-<p align="center">
-    Start a local NEO blockchain with a single command: `make start`
+  Start a local NEO blockchain with a single command: <code>make start</code>
 </p>
 
 <p align="center">
@@ -22,14 +19,7 @@
 
 ## What?
 
-Developing smart contracts requires a local private network of the NEO blockchain to be running. This projects has everything you need to get started with `make start`:
-
-* [neo-privatenet](https://hub.docker.com/r/cityofzion/neo-privatenet/) ([GitHub](https://github.com/CityOfZion/neo-privatenet-docker))
-* [neoscan](http://neoscan.io/) ([GitHub](https://github.com/CityOfZion/neo-scan))
-* [neo-python](https://neo-python.readthedocs.io) (for convenience) ([GitHub](https://github.com/CityOfZion/neo-python))
-* (hopefully soon, [neo-faucet](https://github.com/CityOfZion/neo-faucet))
-
-[Docker Compose](https://docs.docker.com/compose/) is used to package and run all of the services.
+Developing smart contracts for the NEO blockchain requires a local private network to be running. This project sets this up for you, along with a number of other utility services to help with development.
 
 ![image](https://user-images.githubusercontent.com/2796074/36632958-9247f8ba-198d-11e8-8055-f096141902d9.png)
 
@@ -51,7 +41,7 @@ make stop
 
 View what is happening on your local blockchain: [http://localhost:4000](http://localhost:4000)
 
-## Docker Compose Swrvices
+## Docker Compose Services
 
 The [Docker Compose](https://docs.docker.com/compose/) stack is made up of the following
 services:
@@ -60,14 +50,18 @@ services:
 - [neo-python](https://github.com/CityOfZion/neo-python) (development CLI)
 - [neo-scan](https://github.com/CityOfZion/neo-scan) (block explorer)
 - [postgres](https://hub.docker.com/_/postgres/) (database for neo-scan)
+- (coming sooon) [neo-faucet](https://github.com/CityOfZion/neo-faucet)
 
 ## Credit
 
-This is a fork of [@slipo](https://github.com/slipo)'s
-[neo-scan-docker](https://github.com/slipo/neo-scan-docker) repo and [NeoAuth/neo-local](https://github.com/neoauth/neo-local).
+This repo was originally created by [@slipo](https://github.com/slipo) and then built into **neo-local** by the [NeoAuth](https://github.com/neoauth) team.
 
-[Contributors](https://github.com/CityOfZion/neo-local/graphs/contributors)
+It is now moved to be a part of CoZ and is actively maintained by the team - see [contributors](https://github.com/CityOfZion/neo-local/graphs/contributors).
 
 ## License
 
-MIT
+[MIT](https://github.com/CityOfZion/neo-local/blob/master/LICENSE)
+
+## Troubleshooting
+
+If you have an issue then please contact any of the [contributors](https://github.com/CityOfZion/neo-local/graphs/contributors) on the [NEO Discord](https://discord.cityofzion.io).
