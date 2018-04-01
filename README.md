@@ -23,19 +23,29 @@ Developing smart contracts for the NEO blockchain requires a local private netwo
 
 ![image](https://user-images.githubusercontent.com/2796074/36632958-9247f8ba-198d-11e8-8055-f096141902d9.png)
 
+## Prerequisites
+
+Install [Docker CE](https://www.docker.com/community-edition) and [Docker Compose](https://docs.docker.com/compose/).
+
 ## Usage
 
-Install [Docker Compose](https://docs.docker.com/compose/), then run:
+You can either start the full setup with Docker commands or the Makefile:
 
-```
-make start
-```
+**Docker commands**
 
-To stop:
+    # Start the containers:
+    docker-compose up
+   
+    # Run neo-python:
+    docker exec -it neo-python np-prompt -p -v
 
-```
-make stop
-```
+**Makefile**
+
+    # Start and attach to neo-python:
+    make start
+    
+    # Stop
+    make stop
 
 ## Block Explorer
 
