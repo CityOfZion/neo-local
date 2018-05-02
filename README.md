@@ -38,6 +38,18 @@ sets this up for you, along with a number of other utility [services](#services)
 
 ## Install
 
+First start by cloning this repo to your machine:
+
+```
+git clone https://github.com/CityOfZion/neo-local.git
+```
+
+Then change to the newly cloned directory on your machine:
+
+```
+cd ./neo-local
+```
+
 Before being able to use **neo-local**, you will need to install **Docker** and **Docker Compose**.
 
 ### Mac
