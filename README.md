@@ -17,6 +17,17 @@
   </a>
 </p>
 
+## Contents
+
+1. [What?](#what)
+1. [Install](#install)
+1. [Usage](#usage)
+1. [Block Explorer](#block-explorer)
+1. [Services](#services)
+1. [Troubleshooting](#troubleshooting)
+1. [Credit](#credit)
+1. [License](#license)
+
 ## What?
 
 Developing smart contracts for the NEO blockchain requires a local 
@@ -29,19 +40,28 @@ sets this up for you, along with a number of other utility [services](#services)
 
 Before being able to use **neo-local**, you will need to install **Docker** and **Docker Compose**.
 
-For MacOS and Windows users, both are bundled together:
+### Mac
 
-- [Docker for Mac](https://docs.docker.com/docker-for-mac/install/)
-- [Docker for Windows](https://docs.docker.com/docker-for-windows/install/)
+Use the [Docker for Mac](https://docs.docker.com/docker-for-mac/install/) installer to install both 
+dependencies at the same time.
 
-For Linux users, you will have two seperate things to install:
+### Linux
+
+Each dependency has to be installed separately on Linux:
 
 1. [Docker (Community Edition)](https://store.docker.com/search?offering=community&operating_system=linux&q=&type=edition)
 1. [Docker Compose](https://docs.docker.com/compose/install/#install-compose)
 
+### Windows
+
+Use the [Docker for Windows](https://docs.docker.com/docker-for-windows/install/) installer to install
+both dependencies at the same time.
+
 ## Usage
 
-MacOS or Linux users can make use of the **Makefile**:
+### Mac 
+
+Make use of the **Makefile**:
 
 ```
 make start
@@ -49,6 +69,12 @@ make start
 ```
 make stop
 ```
+
+### Linux
+
+Use same commands as [Mac](#mac) users (see above).
+
+### Windows
 
 Windows users must run the **Docker commands manually**:
 
