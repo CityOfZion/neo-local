@@ -5,6 +5,8 @@ integration-tests: setup-network
 	@./scripts/status.sh
 
 setup-network:
+	@./scripts/print.sh prefix "Fetching Docker containers..."
+	@docker-compose pull > /dev/null
 	@./scripts/print.sh prefix "Starting Docker containers..."
 	@docker-compose up -d --build --remove-orphans --force-recreate > /dev/null
 	@./scripts/print.sh prefix "Waiting for network..." false
