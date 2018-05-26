@@ -1,3 +1,5 @@
+language: generic
+
 sudo: required
 
 services:
@@ -10,5 +12,9 @@ notifications:
     on_success: never
     on_failure: always
 
+# Install step is skipped.
+install: true
+
+# Script step is run as part of a shell script as it requires a conditional.
 script:
   ./scripts/travis.sh
