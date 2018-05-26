@@ -11,5 +11,4 @@ notifications:
     on_failure: always
 
 script:
-  - make check-version
-  - make integration-tests
+  ./travis.sh
