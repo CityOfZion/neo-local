@@ -11,4 +11,4 @@ notifications:
     on_failure: always
 
 script:
-  ./travis.sh
+  ./scripts/travis.sh

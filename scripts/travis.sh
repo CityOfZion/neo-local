@@ -1,4 +1,5 @@
 #!/bin/bash
+# Script that Travis CI will run to test the project, it is conditional on the branch.
 
 set -e
 
