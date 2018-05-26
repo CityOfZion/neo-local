@@ -28,7 +28,7 @@ services:
     depends_on:
       - neo-nodes
     volumes:
-      - ./custom-config.json:/neo-python/custom-config.json
+      - ./notifications-server.config.json:/neo-python/custom-config.json
     command: "/usr/bin/python3 /neo-python/neo/bin/api_server.py --config /neo-python/custom-config.json --port-rest 8080"
     ports:
       - 8080:8080
