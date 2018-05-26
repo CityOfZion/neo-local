@@ -1,7 +1,7 @@
 <p align="center">
   <img
     src="http://res.cloudinary.com/vidsy/image/upload/v1503160820/CoZ_Icon_DARKBLUE_200x178px_oq0gxm.png"
-    width="125px"
+    width="150px"
     alt="City of Zion logo">
 </p>
 
@@ -12,8 +12,14 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/CityOfZion/neo-local/tags">
+    <img src="https://img.shields.io/github/tag/CityOfZion/neo-local.svg?style=for-the-badge">
+  </a>
   <a href="https://travis-ci.org/CityOfZion/neo-local">
-    <img src="https://img.shields.io/travis/CityOfZion/neo-local/master.svg">
+    <img src="https://img.shields.io/travis/CityOfZion/neo-local/master.svg?style=for-the-badge">
+  </a>
+  <a href="https://github.com/CityOfZion/neo-local/commits/master">
+    <img src="https://img.shields.io/github/last-commit/CityOfZion/neo-local.svg?style=for-the-badge">
   </a>
 </p>
 
