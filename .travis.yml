@@ -11,4 +11,5 @@ notifications:
     on_failure: always
 
 script:
-  make integration-tests
+  - make check-version
+  - make integration-tests
