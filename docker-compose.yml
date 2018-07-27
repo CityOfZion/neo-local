@@ -64,3 +64,14 @@ services:
       - neo-nodes:30336
     ports:
       - 4000:4000
+  neo-faucet:
+    image: cityofzion/neo-local-faucet
+    container_name: "neo-faucet"
+    depends_on:
+      - neo-scan
+    environment:
+      NEOSCAN: "neo-scan:4000"
+    links:
+      - neo-scan:4000
+    ports:
+      - 4002:4002
