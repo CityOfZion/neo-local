@@ -1,22 +1,22 @@
---- 
+---
 version: "3"
-services: 
-  neo-faucet: 
+services:
+  neo-faucet:
     container_name: neo-faucet
-    depends_on: 
+    depends_on:
       - neo-scan
-    environment: 
+    environment:
       NEOSCAN: "neo-scan:4000"
     image: cityofzion/neo-local-faucet
-    links: 
+    links:
       - "neo-scan:4000"
-    ports: 
+    ports:
       - "4002:4002"
 
-  neo-nodes: 
+  neo-nodes:
     container_name: neo-nodes
-    image: cityofzion/neo-privatenet
-    ports: 
+    image: cityofzion/neo-privatenet:2.7.6
+    ports:
       - "20333:20333"
       - "20334:20334"
       - "20335:20335"
@@ -26,25 +26,25 @@ services:
       - "30335:30335"
       - "30336:30336"
 
-  neo-python: 
+  neo-python:
     container_name: neo-python
-    depends_on: 
+    depends_on:
       - neo-nodes
       - neo-scan
     image: cityofzion/neo-python
     network_mode: host
     tty: true
-    volumes: 
+    volumes:
       - "./smart-contracts:/smart-contracts"
       - "./wallets:/wallets"
 
-  neo-scan: 
+  neo-scan:
     container_name: neo-scan
-    depends_on: 
+    depends_on:
       - postgres
       - neo-nodes
       - notifications-server
-    environment: 
+    environment:
       HOST: "${HOST_NAME}"
       NEO_NOTIFICATIONS_SERVER: "http://${NOTIFICATIONS_SERVER}:8080/v1"
       NEO_SEED_1: "http://${SEED_SERVER}:30333"
@@ -53,31 +53,31 @@ services:
       NEO_SEED_4: "http://${SEED_SERVER}:30336"
       PORT: 4000
     image: registry.gitlab.com/cityofzion/neo-scan
-    links: 
+    links:
       - "neo-nodes:30333"
       - "neo-nodes:30334"
       - "neo-nodes:30335"
       - "neo-nodes:30336"
-    ports: 
+    ports:
       - "4000:4000"
 
-  notifications-server: 
+  notifications-server:
     command: "/usr/bin/python3 /neo-python/neo/bin/api_server.py --config /neo-python/custom-config.json --port-rest 8080"
     container_name: notifications-server
-    depends_on: 
+    depends_on:
       - neo-nodes
     image: cityofzion/neo-python
-    ports: 
+    ports:
       - "8080:8080"
-    volumes: 
+    volumes:
       - "./notifications-server.config.json:/neo-python/custom-config.json"
-      
-  postgres: 
+
+  postgres:
     container_name: postgres
-    environment: 
+    environment:
       POSTGRES_DB: neoscan_prodv
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-    expose: 
+    expose:
       - 5432
     image: "postgres:10.1"
