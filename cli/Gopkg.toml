@@ -1,0 +1,14 @@
+[prune]
+  go-tests = true
+
+[[constraint]]
+  name = "github.com/urfave/cli"
+  version = "1.20.0"
+
+[[constraint]]
+  name = "github.com/fatih/color"
+  version = "v1.7.0"
+
+[[constraint]]
+  name = "github.com/briandowns/spinner"
+  revision = "b3ed21e9d3b2af92b077f7d21edd80599b8fb97f"
