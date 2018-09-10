@@ -31,7 +31,7 @@ services:
     depends_on:
       - neo-nodes
       - neo-scan
-    image: cityofzion/neo-python
+    image: cityofzion/neo-python:v0.7.7
     network_mode: host
     tty: true
     volumes:
@@ -66,7 +66,7 @@ services:
     container_name: notifications-server
     depends_on:
       - neo-nodes
-    image: cityofzion/neo-python
+    image: cityofzion/neo-python:v0.7.7
     ports:
       - "8080:8080"
     volumes:
