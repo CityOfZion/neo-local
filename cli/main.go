@@ -13,7 +13,7 @@ import (
 const (
 	copyright   = "MIT"
 	description = "Quickly setup a local environment for NEO smart contract development"
-	version     = "0.1.1"
+	version     = "0.2.0"
 )
 
 var (

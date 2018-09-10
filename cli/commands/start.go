@@ -2,6 +2,7 @@ package commands
 
 import (
 	"errors"
+
 	"log"
 
 	"github.com/CityOfZion/neo-local/cli/services"
@@ -58,6 +59,11 @@ func (s Start) action() func(c *cli.Context) error {
 		ok := services.CheckDockerRunning(ctx, cli)
 		if !ok {
 			return errors.New("Docker is not running")
+		}
+
+		err = services.PullDockerImages(ctx, cli)
+		if err != nil {
+			return err
 		}
 
 		saveState := c.Bool("ss")
