@@ -1,10 +1,15 @@
 package commands
 
 import (
+	"errors"
 	"log"
 
+	"github.com/CityOfZion/neo-local/cli/services"
 	"github.com/fatih/color"
 	"github.com/urfave/cli"
+
+	"github.com/docker/docker/client"
+	"golang.org/x/net/context"
 )
 
 const (
@@ -39,13 +44,23 @@ func (s Start) ToCommand() cli.Command {
 
 func (s Start) action() func(c *cli.Context) error {
 	return func(c *cli.Context) error {
-		saveState := c.Bool("ss")
 		verbose := c.Bool("v")
-
 		if verbose {
 			log.Println("Verbose logging is enabled")
 		}
 
+		ctx := context.Background()
+		cli, err := client.NewEnvClient()
+		if err != nil {
+			return errors.New("Unable to create Docker client")
+		}
+
+		ok := services.CheckDockerRunning(ctx, cli)
+		if !ok {
+			return errors.New("Docker is not running")
+		}
+
+		saveState := c.Bool("ss")
 		if saveState {
 			log.Println("Save state is enabled, existing environment will not be destroyed")
 		} else {

@@ -13,7 +13,7 @@ import (
 const (
 	copyright   = "MIT"
 	description = "Quickly setup a local environment for NEO smart contract development"
-	version     = "0.1.0"
+	version     = "0.1.1"
 )
 
 var (
@@ -38,6 +38,10 @@ func main() {
 
 	err := app.Run(os.Args)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf(
+			"%s %s. Please check the FAQ: https://github.com/CityOfZion/neo-local/wiki/FAQ",
+			color.RedString("ERROR:"),
+			color.RedString(err.Error()),
+		)
 	}
 }

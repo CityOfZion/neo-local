@@ -12,3 +12,11 @@
 [[constraint]]
   name = "github.com/briandowns/spinner"
   revision = "b3ed21e9d3b2af92b077f7d21edd80599b8fb97f"
+
+[[constraint]]
+  name = "github.com/docker/docker"
+  version = "1.13.1"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/net"
