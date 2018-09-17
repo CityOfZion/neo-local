@@ -40,7 +40,7 @@ func dockerImageNames() []string {
 	return []string{
 		"cityofzion/neo-local-faucet",
 		"cityofzion/neo-privatenet:2.7.6",
-		"cityofzion/neo-python:v0.7.7",
+		"cityofzion/neo-python:v0.7.8",
 		"postgres:10.1",
 		"registry.gitlab.com/cityofzion/neo-scan",
 	}
