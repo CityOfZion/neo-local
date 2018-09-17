@@ -66,7 +66,7 @@ services:
     container_name: notifications-server
     depends_on:
       - neo-nodes
-    image: cityofzion/neo-python:v0.7.7
+    image: cityofzion/neo-python
     ports:
       - "8080:8080"
     volumes:

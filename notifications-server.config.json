@@ -25,6 +25,7 @@
 		}
 	},
 	"ApplicationConfiguration": {
+		"AcceptIncomingPeers": false,
 		"DataDirectoryPath": "Chains/privnet",
 		"NotificationDataPath": "Chains/privnet_notif",
 		"RPCPort": 20332,
