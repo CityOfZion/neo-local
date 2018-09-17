@@ -1,2 +1,4 @@
+VERSION = $(shell cat ../VERSION)
+
 build:
-	@go build -o neo-local .
+	@go build -i -ldflags "-X main.Version=${VERSION}" -o neo-local .
