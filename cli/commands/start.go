@@ -50,6 +50,17 @@ func (s Start) action() func(c *cli.Context) error {
 			log.Println("Verbose logging is enabled")
 		}
 
+		saveState := c.Bool("ss")
+		if saveState {
+			log.Println("Save state is enabled, existing environment will not be destroyed")
+		} else {
+			log.Printf(
+				"Save state is %s, existing environment will be %s",
+				color.RedString("disabled"),
+				color.RedString("destroyed"),
+			)
+		}
+
 		ctx := context.Background()
 		cli, err := client.NewEnvClient()
 		if err != nil {
@@ -64,17 +75,6 @@ func (s Start) action() func(c *cli.Context) error {
 		err = services.PullDockerImages(ctx, cli)
 		if err != nil {
 			return err
-		}
-
-		saveState := c.Bool("ss")
-		if saveState {
-			log.Println("Save state is enabled, existing environment will not be destroyed")
-		} else {
-			log.Printf(
-				"Save state is %s, existing environment will be %s",
-				color.RedString("disabled"),
-				color.RedString("destroyed"),
-			)
 		}
 
 		// TODO
