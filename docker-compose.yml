@@ -4,12 +4,12 @@ services:
   neo-faucet:
     container_name: neo-faucet
     depends_on:
-      - neo-scan
+      - neo-scan-api
     environment:
-      NEOSCAN: "neo-scan:4000"
+      NEOSCAN: "neo-scan-api:4000"
     image: cityofzion/neo-local-faucet
     links:
-      - "neo-scan:4000"
+      - "neo-scan-api:4000"
     ports:
       - "4002:4002"
 
@@ -30,7 +30,8 @@ services:
     container_name: neo-python
     depends_on:
       - neo-nodes
-      - neo-scan
+      - neo-scan-api
+      - neo-scan-sync
     image: cityofzion/neo-python:v0.7.7
     network_mode: host
     tty: true
@@ -38,28 +39,51 @@ services:
       - "./smart-contracts:/smart-contracts"
       - "./wallets:/wallets"
 
-  neo-scan:
-    container_name: neo-scan
+  neo-scan-sync:
+    container_name: neo-scan-sync
     depends_on:
       - postgres
       - neo-nodes
       - notifications-server
     environment:
-      HOST: "${HOST_NAME}"
       NEO_NOTIFICATIONS_SERVER: "http://${NOTIFICATIONS_SERVER}:8080/v1"
-      NEO_SEED_1: "http://${SEED_SERVER}:30333"
-      NEO_SEED_2: "http://${SEED_SERVER}:30334"
-      NEO_SEED_3: "http://${SEED_SERVER}:30335"
-      NEO_SEED_4: "http://${SEED_SERVER}:30336"
-      PORT: 4000
-    image: registry.gitlab.com/cityofzion/neo-scan
+      NEO_SEEDS: "http://${SEED_SERVER}:30333;http://${SEED_SERVER}:30334;http://${SEED_SERVER}:30335;http://${SEED_SERVER}:30336"
+      DB_HOSTNAME: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_DATABASE: neoscan_prodv
+      REPLACE_OS_VARS: "true"
+    image: registry.gitlab.com/cityofzion/neo-scan/sync
     links:
       - "neo-nodes:30333"
       - "neo-nodes:30334"
       - "neo-nodes:30335"
       - "neo-nodes:30336"
+
+  neo-scan-api:
+    container_name: neo-scan-api
+    depends_on:
+    - postgres
+    - neo-nodes
+    - notifications-server
+    environment:
+      HOST: "${HOST_NAME}"
+      NEO_NOTIFICATIONS_SERVER: "http://${NOTIFICATIONS_SERVER}:8080/v1"
+      NEO_SEEDS: "http://${SEED_SERVER}:30333;http://${SEED_SERVER}:30334;http://${SEED_SERVER}:30335;http://${SEED_SERVER}:30336"
+      PORT: 4000
+      DB_HOSTNAME: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_DATABASE: neoscan_prodv
+      REPLACE_OS_VARS: "true"
+    image: registry.gitlab.com/cityofzion/neo-scan/api
+    links:
+    - "neo-nodes:30333"
+    - "neo-nodes:30334"
+    - "neo-nodes:30335"
+    - "neo-nodes:30336"
     ports:
-      - "4000:4000"
+    - "4000:4000"
 
   notifications-server:
     command: "/usr/bin/python3 /neo-python/neo/bin/api_server.py --config /neo-python/custom-config.json --port-rest 8080"
