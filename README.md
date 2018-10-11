@@ -12,8 +12,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/CityOfZion/neo-local/tags">
-    <img src="https://img.shields.io/github/tag/CityOfZion/neo-local.svg?style=for-the-badge">
+  <a href="https://github.com/CityOfZion/neo-local/releases">
+    <img src="https://img.shields.io/github/release/CityOfZion/neo-local.svg?style=for-the-badge">
   </a>
   <a href="https://travis-ci.org/CityOfZion/neo-local">
     <img src="https://img.shields.io/travis/CityOfZion/neo-local/master.svg?style=for-the-badge">
