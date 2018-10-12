@@ -6,20 +6,13 @@ import (
 	"log"
 
 	"github.com/CityOfZion/neo-local/cli/services"
+	"github.com/CityOfZion/neo-local/cli/stack"
 	"github.com/fatih/color"
 	"github.com/urfave/cli"
 
+	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"golang.org/x/net/context"
-)
-
-const (
-	name  = "start"
-	usage = "Launch the development environment"
-)
-
-var (
-	alias = string(name[0])
 )
 
 type (
@@ -36,10 +29,10 @@ func NewStart() Start {
 func (s Start) ToCommand() cli.Command {
 	return cli.Command{
 		Action:  s.action(),
-		Aliases: []string{alias},
+		Aliases: []string{"go", "up"},
 		Flags:   s.flags(),
-		Name:    name,
-		Usage:   usage,
+		Name:    "start",
+		Usage:   "Launch the development environment",
 	}
 }
 
@@ -77,7 +70,23 @@ func (s Start) action() func(c *cli.Context) error {
 			return err
 		}
 
-		// TODO
+		services := stack.Services()
+
+		for _, service := range services {
+			resp, err := cli.ContainerCreate(
+				ctx, service.Config(), nil, nil, service.ContainerName(),
+			)
+			if err != nil {
+				return err
+			}
+
+			err = cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{})
+			if err != nil {
+				return err
+			}
+
+			log.Printf("Started %s", service.Image)
+		}
 
 		return nil
 	}
