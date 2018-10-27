@@ -6,7 +6,8 @@
 
 ...
 
-## Notes
+## Checklist
 
-- [ ] Remember to bump the `VERSION` file using [semver](https://semver.org/) 📝
-- [ ] Make sure the CI tests pass on your branch 👍
+- [ ] I have ran the tests locally.
+- [ ] I branched off of the `develop` branch and not `master`.
+- [ ] I did not change the `VERSION` file.

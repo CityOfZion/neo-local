@@ -49,6 +49,6 @@ func dockerImageNames() []string {
 		"cityofzion/neo-python:v0.8.1",
 		"postgres:10.5",
 		"registry.gitlab.com/cityofzion/neo-scan/api:latest",
-		"registry.gitlab.com/cityofzion/neo-scan/sync:latest"
+		"registry.gitlab.com/cityofzion/neo-scan/sync:latest",
 	}
 }

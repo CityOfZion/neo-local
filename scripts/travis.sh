@@ -5,10 +5,9 @@ version=$(cat ./VERSION)
 
 set -e
 
-if [[ $TRAVIS_BRANCH == 'master' || $TRAVIS_TAG == $version ]]
+if [[ $TRAVIS_BRANCH == release/* ]]
 then
-  make integration-tests
-else
   make check-version
-  make integration-tests
 fi
+
+make integration-tests

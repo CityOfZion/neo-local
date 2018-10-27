@@ -8,8 +8,10 @@ import (
 // the CLI.
 func GenerateCommandsIndex() []cli.Command {
 	start := NewStart()
+	status := NewStatus()
 
 	return []cli.Command{
 		start.ToCommand(),
+		status.ToCommand(),
 	}
 }
