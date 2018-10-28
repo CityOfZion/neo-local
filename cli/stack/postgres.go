@@ -5,10 +5,11 @@ import (
 	"github.com/docker/go-connections/nat"
 )
 
-// NewPostgres creates a new service for the Postgres container.
+// NewPostgres creates a new service for the library/postgres container.
 func NewPostgres() Service {
 	return Service{
-		ContainerConfig: container.Config{
+		Author: "library",
+		ContainerConfig: &container.Config{
 			Env: []string{
 				"POSTGRES_DB=neoscan_prodv",
 				"POSTGRES_PASSWORD=postgres",
@@ -16,7 +17,8 @@ func NewPostgres() Service {
 			},
 			ExposedPorts: map[nat.Port]struct{}{"5432/tcp": {}},
 		},
-		Image: "library/postgres",
-		Tag:   "10.5",
+		HostConfig: nil,
+		Image:      "postgres",
+		Tag:        "10.5",
 	}
 }

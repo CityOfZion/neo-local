@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/CityOfZion/neo-local/cli/logger"
+	"github.com/CityOfZion/neo-local/cli/stack"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"golang.org/x/net/context"
@@ -25,14 +26,20 @@ func CheckDockerRunning(ctx context.Context, cli *client.Client) bool {
 func PullDockerImages(ctx context.Context, cli *client.Client) error {
 	log.Println("Pulling Docker images")
 
-	for _, imageName := range dockerImageNames() {
-		prefix := fmt.Sprintf("↪  %s", imageName)
+	for _, service := range stack.Services() {
+		prefix := fmt.Sprintf("↪  %s", service.ImageName())
 		s := logger.NewSpinner(prefix)
 		s.Start()
 
-		reader, err := cli.ImagePull(ctx, imageName, types.ImagePullOptions{})
+		reader, err := cli.ImagePull(
+			ctx, service.ImageName(), types.ImagePullOptions{},
+		)
 		if err != nil {
-			return fmt.Errorf("Error when pulling Docker image '%s': %s", imageName, err)
+			return fmt.Errorf(
+				"Error when pulling Docker image '%s': %s",
+				service.ImageName(),
+				err,
+			)
 		}
 
 		defer reader.Close()
@@ -40,15 +47,4 @@ func PullDockerImages(ctx context.Context, cli *client.Client) error {
 	}
 
 	return nil
-}
-
-func dockerImageNames() []string {
-	return []string{
-		"cityofzion/neo-local-faucet:latest",
-		"cityofzion/neo-privatenet:2.7.6",
-		"cityofzion/neo-python:v0.8.1",
-		"library/postgres:10.5",
-		"registry.gitlab.com/cityofzion/neo-scan/api:latest",
-		"registry.gitlab.com/cityofzion/neo-scan/sync:latest",
-	}
 }

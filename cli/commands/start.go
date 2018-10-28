@@ -7,7 +7,6 @@ import (
 
 	"github.com/CityOfZion/neo-local/cli/services"
 	"github.com/CityOfZion/neo-local/cli/stack"
-	"github.com/fatih/color"
 	"github.com/urfave/cli"
 
 	"github.com/docker/docker/api/types"
@@ -38,21 +37,21 @@ func (s Start) ToCommand() cli.Command {
 
 func (s Start) action() func(c *cli.Context) error {
 	return func(c *cli.Context) error {
-		verbose := c.Bool("v")
-		if verbose {
-			log.Println("Verbose logging is enabled")
-		}
+		// verbose := c.Bool("v")
+		// if verbose {
+		// 	log.Println("Verbose logging is enabled")
+		// }
 
-		saveState := c.Bool("ss")
-		if saveState {
-			log.Println("Save state is enabled, existing environment will not be destroyed")
-		} else {
-			log.Printf(
-				"Save state is %s, existing environment will be %s",
-				color.RedString("disabled"),
-				color.RedString("destroyed"),
-			)
-		}
+		// saveState := c.Bool("ss")
+		// if saveState {
+		// 	log.Println("Save state is enabled, existing environment will not be destroyed")
+		// } else {
+		// 	log.Printf(
+		// 		"Save state is %s, existing environment will be %s",
+		// 		color.RedString("disabled"),
+		// 		color.RedString("destroyed"),
+		// 	)
+		// }
 
 		ctx := context.Background()
 		cli, err := client.NewEnvClient()
@@ -70,11 +69,13 @@ func (s Start) action() func(c *cli.Context) error {
 			return err
 		}
 
-		services := stack.Services()
-
-		for _, service := range services {
+		for _, service := range stack.Services() {
 			resp, err := cli.ContainerCreate(
-				ctx, service.Config(), nil, nil, service.ContainerName(),
+				ctx,
+				service.Config(),
+				service.HostConfig,
+				nil,
+				service.ContainerName(),
 			)
 			if err != nil {
 				return err
@@ -94,13 +95,17 @@ func (s Start) action() func(c *cli.Context) error {
 
 func (s Start) flags() []cli.Flag {
 	return []cli.Flag{
-		cli.BoolFlag{
-			Name:  "save-state, ss",
-			Usage: "Any state in the existing environment will be saved (default: false)",
-		},
-		cli.BoolFlag{
-			Name:  "verbose, v",
-			Usage: "Enable verbose logging (default: false)",
-		},
+		// cli.BoolFlag{
+		// 	Name:  "pull-images, pi",
+		// 	Usage: "Pull the latest Docker images (default: true)",
+		// },
+		// cli.BoolFlag{
+		// 	Name:  "save-state, ss",
+		// 	Usage: "Any state in the existing environment will be saved (default: false)",
+		// },
+		// cli.BoolFlag{
+		// 	Name:  "verbose, v",
+		// 	Usage: "Enable verbose logging (default: false)",
+		// },
 	}
 }
