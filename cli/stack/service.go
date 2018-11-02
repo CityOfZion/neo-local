@@ -6,6 +6,11 @@ import (
 	"github.com/docker/docker/api/types/container"
 )
 
+const (
+	// ContainerNamePrefix is the prefix added to all neo-local containers.
+	ContainerNamePrefix = "coz_neo-local_"
+)
+
 type (
 	// Service defines a Docker container to run within the stack.
 	Service struct {
@@ -26,7 +31,7 @@ func (s Service) Config() *container.Config {
 
 // ContainerName is the Docker container name.
 func (s Service) ContainerName() string {
-	return fmt.Sprintf("coz_neo-local_%s", s.Image)
+	return fmt.Sprintf("%s%s", ContainerNamePrefix, s.Image)
 }
 
 // ImageName is the full Docker image name for the service, including the tag.

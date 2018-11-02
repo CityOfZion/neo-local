@@ -7,3 +7,14 @@ func Services() []Service {
 		NewPostgres(),
 	}
 }
+
+// ServiceContainerNames returns all of the service container names in an array.
+func ServiceContainerNames() []string {
+	containerNames := []string{}
+
+	for _, service := range Services() {
+		containerNames = append(containerNames, service.ContainerName())
+	}
+
+	return containerNames
+}

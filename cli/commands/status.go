@@ -2,7 +2,6 @@ package commands
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"strings"
 
@@ -59,8 +58,7 @@ func (s Status) action() func(c *cli.Context) error {
 		for _, container := range runningContainers {
 			containerName := ""
 			for _, name := range container.Names {
-				if strings.Contains(name, "coz_neo-local_") { // TODO: this string should be a const.
-					fmt.Println(name)
+				if strings.Contains(name, stack.ContainerNamePrefix) {
 					containerName = name
 					break
 				}

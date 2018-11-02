@@ -7,10 +7,12 @@ import (
 // GenerateCommandsIndex creates a slice of all the commands that are within
 // the CLI.
 func GenerateCommandsIndex() []cli.Command {
+	down := NewDown()
 	start := NewStart()
 	status := NewStatus()
 
 	return []cli.Command{
+		down.ToCommand(),
 		start.ToCommand(),
 		status.ToCommand(),
 	}
