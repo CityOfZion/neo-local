@@ -5,7 +5,7 @@ version=$(cat ./VERSION)
 
 set -e
 
-if [[ $TRAVIS_BRANCH == release/* ]]
+if [[ $TRAVIS_BRANCH == release/* || $TRAVIS_BRANCH == hotfix/* ]]
 then
   make check-version
 fi

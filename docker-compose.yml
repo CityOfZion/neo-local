@@ -32,7 +32,7 @@ services:
       - neo-nodes
       - neo-scan-api
       - neo-scan-sync
-    image: cityofzion/neo-python:v0.8.1
+    image: cityofzion/neo-python:v0.8.2
     network_mode: host
     tty: true
     volumes:
@@ -90,7 +90,7 @@ services:
     container_name: notifications-server
     depends_on:
       - neo-nodes
-    image: cityofzion/neo-python:v0.8.1
+    image: cityofzion/neo-python:v0.8.2
     ports:
       - "8080:8080"
     volumes:
