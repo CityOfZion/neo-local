@@ -5,6 +5,7 @@ func Services() []Service {
 	return []Service{
 		NewFaucet(),
 		NewPostgres(),
+		NewPrivateNet(),
 	}
 }
 
