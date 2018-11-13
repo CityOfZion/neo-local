@@ -94,3 +94,4 @@ func FetchContainerReferences(ctx context.Context, cli *client.Client) (map[stri
 
 	return containerReferences, nil
 }
+
