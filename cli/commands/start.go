@@ -86,7 +86,7 @@ func (s Start) action() func(c *cli.Context) error {
 				return err
 			}
 
-			log.Printf("Started %s", service.Image)
+			log.Printf("Started %s", service.Name)
 		}
 
 		return nil

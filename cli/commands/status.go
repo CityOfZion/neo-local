@@ -71,7 +71,7 @@ func (s Status) action() func(c *cli.Context) error {
 			for _, service := range services {
 				if strings.Contains(containerName, service.ContainerName()) {
 					log.Printf(
-						"%s in '%s' state", service.Image, container.State,
+						"%s in '%s' state", service.Name, container.State,
 					)
 					break
 				}

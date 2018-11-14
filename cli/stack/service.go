@@ -18,6 +18,7 @@ type (
 		ContainerConfig *container.Config
 		HostConfig      *container.HostConfig
 		Image           string
+		Name            string
 		Tag             string
 	}
 )
@@ -31,7 +32,7 @@ func (s Service) Config() *container.Config {
 
 // ContainerName is the Docker container name.
 func (s Service) ContainerName() string {
-	return fmt.Sprintf("%s%s", ContainerNamePrefix, s.Image)
+	return fmt.Sprintf("%s%s", ContainerNamePrefix, s.Name)
 }
 
 // ImageName is the full Docker image name for the service, including the tag.
