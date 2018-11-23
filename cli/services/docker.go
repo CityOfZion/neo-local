@@ -1,7 +1,9 @@
 package services
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"strings"
 
@@ -35,6 +37,16 @@ func PullDockerImages(ctx context.Context, cli *client.Client) error {
 		reader, err := cli.ImagePull(
 			ctx, service.ImageName(), types.ImagePullOptions{},
 		)
+		if err != nil {
+			return fmt.Errorf(
+				"Error when pulling Docker image '%s': %s",
+				service.ImageName(),
+				err,
+			)
+		}
+
+		var b bytes.Buffer
+		_, err = io.Copy(&b, reader)
 		if err != nil {
 			return fmt.Errorf(
 				"Error when pulling Docker image '%s': %s",
