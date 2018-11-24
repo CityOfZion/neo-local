@@ -29,7 +29,12 @@ func CheckDockerRunning(ctx context.Context, cli *client.Client) bool {
 func PullDockerImages(ctx context.Context, cli *client.Client) error {
 	log.Println("Pulling Docker images")
 
-	for _, service := range stack.Services() {
+	services, err := stack.Services()
+	if err != nil {
+		return err
+	}
+
+	for _, service := range services {
 		prefix := fmt.Sprintf("↪  %s", service.ImageName())
 		s := logger.NewSpinner(prefix)
 		s.Start()
@@ -66,10 +71,14 @@ func PullDockerImages(ctx context.Context, cli *client.Client) error {
 // stack.
 func FetchContainerReferences(ctx context.Context, cli *client.Client) (map[string]string, error) {
 	containerReferences := map[string]string{}
-	serviceContainerNames := stack.ServiceContainerNames()
 
-	for _, serviceContainerName := range serviceContainerNames {
-		containerReferences[serviceContainerName] = ""
+	containerNames, err := stack.ServiceContainerNames()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, containerName := range containerNames {
+		containerReferences[containerName] = ""
 	}
 
 	containers, err := cli.ContainerList(
@@ -83,22 +92,22 @@ func FetchContainerReferences(ctx context.Context, cli *client.Client) (map[stri
 	}
 
 	for _, container := range containers {
-		var containerName string
+		var containerServiceName string
 		for _, name := range container.Names {
 			name = strings.Replace(name, "/", "", -1)
 			if strings.HasPrefix(name, stack.ContainerNamePrefix) {
-				containerName = name
+				containerServiceName = name
 				break
 			}
 		}
 
-		if containerName == "" {
+		if containerServiceName == "" {
 			continue
 		}
 
-		for _, serviceContainerName := range serviceContainerNames {
-			if containerName == serviceContainerName {
-				containerReferences[containerName] = container.ID
+		for _, serviceName := range containerNames {
+			if containerServiceName == serviceName {
+				containerReferences[containerServiceName] = container.ID
 				break
 			}
 		}
@@ -106,4 +115,3 @@ func FetchContainerReferences(ctx context.Context, cli *client.Client) (map[stri
 
 	return containerReferences, nil
 }
-

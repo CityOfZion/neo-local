@@ -69,7 +69,12 @@ func (s Start) action() func(c *cli.Context) error {
 			return err
 		}
 
-		for _, service := range stack.Services() {
+		services, err := stack.Services()
+		if err != nil {
+			return err
+		}
+
+		for _, service := range services {
 			resp, err := cli.ContainerCreate(
 				ctx,
 				service.Config(),

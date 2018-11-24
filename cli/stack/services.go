@@ -1,21 +1,29 @@
 package stack
 
 // Services returns all the services within the Docker stack.
-func Services() []Service {
-	return []Service{
-		NewFaucet(),
-		NewPostgres(),
-		NewPrivateNet(),
+func Services() ([]Service, error) {
+	neoPython, err := NewNeoPython()
+	if err != nil {
+		return nil, err
 	}
+
+	return []Service{
+		NewFaucet(), NewPostgres(), neoPython,
+	}, nil
 }
 
 // ServiceContainerNames returns all of the service container names in an array.
-func ServiceContainerNames() []string {
+func ServiceContainerNames() ([]string, error) {
 	containerNames := []string{}
 
-	for _, service := range Services() {
+	services, err := Services()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, service := range services {
 		containerNames = append(containerNames, service.ContainerName())
 	}
 
-	return containerNames
+	return containerNames, nil
 }

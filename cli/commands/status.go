@@ -49,7 +49,11 @@ func (s Status) action() func(c *cli.Context) error {
 			return errors.New("Docker is not running")
 		}
 
-		services := stack.Services()
+		services, err := stack.Services()
+		if err != nil {
+			return err
+		}
+
 		runningContainers, err := cli.ContainerList(ctx, types.ContainerListOptions{})
 		if err != nil {
 			return err
