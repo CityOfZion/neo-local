@@ -7,8 +7,13 @@ func Services() ([]Service, error) {
 		return nil, err
 	}
 
+	notificationsServer, err := NewNotificationsServer()
+	if err != nil {
+		return nil, err
+	}
+
 	return []Service{
-		NewFaucet(), NewPostgres(), neoPython,
+		NewFaucet(), NewPostgres(), neoPython, NewPrivateNet(), notificationsServer,
 	}, nil
 }
 
