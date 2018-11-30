@@ -126,6 +126,24 @@ This is a possible example:
 ./privnet/change_neo-cli_node_version.sh neo-cli-privatenet-3 2.9.0
 ```
 Note: This works for upgrading or downgrading the version.
+
+### Bootstrap a genesis clean chain
+
+Sometimes is good to start fresh from the genesis block.<br>
+You can do that changing the variables on the `.env` file
+
+```
+neo-local/
+├── .env
+```
+
+Inside that file you have a variable called BOOTSTRAP.<br>
+There are two possible values:<br>
+- `_genesis` means starting from block zero
+- `_4kBlocks` starts with 4000 blocks (default)
+
+Note: A genesis chain doesn't have GAS claimed yet. You will need GAS to deploy smart-contracts.
+
 ## Bugs and feature requests
 
 Have a bug or a feature request? Please first read the [issue guidelines](https://github.com/CityOfZion/neo-local/CONTRIBUTING.md) and search for existing and closed issues. If your problem or idea is not addressed yet, [please open a new issue](https://github.com/CityOfZion/neo-local/issues/new/choose).

@@ -15,7 +15,7 @@ services:
 
   neo-cli-privatenet-1:
     container_name: neo-cli-privatenet-1
-    image: cityofzion/neo-local-privatenet:$NODE1_NEO_CLI_VERSION
+    image: cityofzion/neo-local-privatenet:$NODE1_NEO_CLI_VERSION$BOOTSTRAP
     environment:
       NODE_NUMBER: 1
     ports:
@@ -24,7 +24,7 @@ services:
 
   neo-cli-privatenet-2:
     container_name: neo-cli-privatenet-2
-    image: cityofzion/neo-local-privatenet:$NODE2_NEO_CLI_VERSION
+    image: cityofzion/neo-local-privatenet:$NODE2_NEO_CLI_VERSION$BOOTSTRAP
     environment:
       NODE_NUMBER: 2
     ports:
@@ -33,7 +33,7 @@ services:
 
   neo-cli-privatenet-3:
     container_name: neo-cli-privatenet-3
-    image: cityofzion/neo-local-privatenet:$NODE3_NEO_CLI_VERSION
+    image: cityofzion/neo-local-privatenet:$NODE3_NEO_CLI_VERSION$BOOTSTRAP
     environment:
       NODE_NUMBER: 3
     ports:
@@ -42,7 +42,7 @@ services:
   
   neo-cli-privatenet-4:
     container_name: neo-cli-privatenet-4
-    image: cityofzion/neo-local-privatenet:$NODE4_NEO_CLI_VERSION
+    image: cityofzion/neo-local-privatenet:$NODE4_NEO_CLI_VERSION$BOOTSTRAP
     environment:
       NODE_NUMBER: 4
     ports:
