@@ -17,15 +17,15 @@
   revision = "b3ed21e9d3b2af92b077f7d21edd80599b8fb97f"
 
 [[projects]]
-  digest = "1:dcbc776b2929a04de0339c47fdaa6332b094834bec4bd59dc65dfc5e61bfc31c"
+  digest = "1:bd3ffa8395e5f3cee7a1d38a7f4de0df088301e25c4e6910fc53936c4be09278"
   name = "github.com/docker/distribution"
   packages = [
-    "digest",
+    "digestset",
     "reference",
   ]
   pruneopts = "T"
-  revision = "48294d928ced5dd9b378f7fd7c6f5da3ff3f2c89"
-  version = "v2.6.2"
+  revision = "40b7b5830a2337bb07627617740c0e39eb92800c"
+  version = "v2.7.0"
 
 [[projects]]
   digest = "1:737600611200b7066942318948256cde82f62c2cafa0045c483f1c7c5fc0ad2b"
@@ -97,6 +97,14 @@
   version = "v0.0.4"
 
 [[projects]]
+  digest = "1:ee4d4af67d93cc7644157882329023ce9a7bcfce956a079069a9405521c7cc8d"
+  name = "github.com/opencontainers/go-digest"
+  packages = ["."]
+  pruneopts = "T"
+  revision = "279bed98673dd5bef374d3b6e4b09e2af76183bf"
+  version = "v1.0.0-rc1"
+
+[[projects]]
   digest = "1:40e195917a951a8bf867cd05de2a46aaf1806c50cf92eebf4c16f78cd196f747"
   name = "github.com/pkg/errors"
   packages = ["."]
@@ -114,7 +122,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:2584347a8e1438435975f69490a9aff755899d57f9afc67798cd2ae49ac16aaf"
+  digest = "1:134fd2b5998199ca103bdcd2920be488fffbbf307fec71d158b773694a8a2080"
   name = "golang.org/x/net"
   packages = [
     "context",
@@ -123,18 +131,18 @@
     "proxy",
   ]
   pruneopts = "T"
-  revision = "161cd47e91fd58ac17490ef4d742dc98bb4cf60e"
+  revision = "610586996380ceef02dd726cc09df7e00a3f8e56"
 
 [[projects]]
   branch = "master"
-  digest = "1:bfa444982d49ce4ca1360599270a94de12a573ccd3bf04493c79bee09da3170b"
+  digest = "1:347b7a4c599ce7a46b930a797c24a14a376e6dfdd8cc9a12ada43afc47b86224"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "T"
-  revision = "2b024373dcd9800f0cae693839fac6ede8d64a8c"
+  revision = "ad97f365e15054527b467150f898ec66d7f81e14"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -144,6 +152,7 @@
     "github.com/docker/docker/api/types",
     "github.com/docker/docker/api/types/container",
     "github.com/docker/docker/client",
+    "github.com/docker/go-connections/nat",
     "github.com/fatih/color",
     "github.com/urfave/cli",
     "golang.org/x/net/context",
