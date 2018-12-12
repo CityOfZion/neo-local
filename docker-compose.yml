@@ -58,7 +58,7 @@ services:
       - neo-cli-privatenet-4
       - neo-scan-api
       - neo-scan-sync
-    image: cityofzion/neo-python:v0.8.1
+    image: cityofzion/neo-python:v0.8.2
     network_mode: host
     tty: true
     volumes:

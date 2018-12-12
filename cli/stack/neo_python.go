@@ -31,7 +31,7 @@ func NewNeoPython() (Service, error) {
 			PublishAllPorts: false,
 		},
 		Image: "neo-python",
-		Name:  "Neo-python",
+		Name:  "neo-python",
 		Tag:   "v0.8.2",
 	}, nil
 }

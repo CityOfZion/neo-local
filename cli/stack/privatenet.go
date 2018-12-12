@@ -76,6 +76,7 @@ func NewPrivateNet() Service {
 			PublishAllPorts: true,
 		},
 		Image: "neo-privatenet",
+		Name:  "neo-privatenet",
 		Tag:   "2.8.0",
 	}
 }
