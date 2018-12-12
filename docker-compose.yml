@@ -125,7 +125,7 @@ services:
       - neo-cli-privatenet-2
       - neo-cli-privatenet-3
       - neo-cli-privatenet-4
-    image: cityofzion/neo-python
+    image: cityofzion/neo-python:v0.8.2
     ports:
       - "8080:8080"
     volumes:
