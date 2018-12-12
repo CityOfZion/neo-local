@@ -79,7 +79,7 @@ services:
       - neo-cli-privatenet-4
       - neo-scan-api
       - neo-scan-sync
-    image: cityofzion/neo-python:v0.8.2
+    image: 'cityofzion/neo-python:v0.8.2'
     network_mode: host
     tty: true
     volumes:
@@ -101,8 +101,7 @@ services:
       DB_PASSWORD: postgres
       DB_USERNAME: postgres
       NEO_NOTIFICATIONS_SERVER: 'http://${NOTIFICATIONS_SERVER}:8080/v1'
-      NEO_SEEDS: >-
-        http://neo-cli-privatenet-1:30333;http://neo-cli-privatenet-2:30334;http://neo-cli-privatenet-3:30335;http://neo-cli-privatenet-4:30336
+      NEO_SEEDS: http://neo-cli-privatenet-1:30333;http://neo-cli-privatenet-2:30334;http://neo-cli-privatenet-3:30335;http://neo-cli-privatenet-4:30336
       PORT: 4000
       REPLACE_OS_VARS: 'true'
     healthcheck:
@@ -142,8 +141,7 @@ services:
       DB_PASSWORD: postgres
       DB_USERNAME: postgres
       NEO_NOTIFICATIONS_SERVER: 'http://${NOTIFICATIONS_SERVER}:8080/v1'
-      NEO_SEEDS: >-
-        http://neo-cli-privatenet-1:30333;http://neo-cli-privatenet-2:30334;http://neo-cli-privatenet-3:30335;http://neo-cli-privatenet-4:30336
+      NEO_SEEDS: http://neo-cli-privatenet-1:30333;http://neo-cli-privatenet-2:30334;http://neo-cli-privatenet-3:30335;http://neo-cli-privatenet-4:30336
       REPLACE_OS_VARS: 'true'
     image: 'registry.gitlab.com/cityofzion/neo-scan/sync:latest'
     links:
@@ -167,7 +165,7 @@ services:
       - '8080:8080'
     volumes:
       - './notifications-server.config.json:/neo-python/custom-config.json'
-      
+
   postgres:
     container_name: postgres
     environment:
