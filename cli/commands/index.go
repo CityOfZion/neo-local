@@ -10,10 +10,12 @@ func GenerateCommandsIndex() []cli.Command {
 	down := NewDown()
 	start := NewStart()
 	status := NewStatus()
+	stop := NewStop()
 
 	return []cli.Command{
 		down.ToCommand(),
 		start.ToCommand(),
 		status.ToCommand(),
+		stop.ToCommand(),
 	}
 }
