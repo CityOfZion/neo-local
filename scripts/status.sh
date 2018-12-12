@@ -2,7 +2,7 @@
 # Script used within the integration tests to check that all the services are operational.
 
 CURRENT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-EXPECTED_NUMBER_OF_SERVICES=10
+EXPECTED_NUMBER_OF_SERVICES=11
 
 NUMBER_OF_RUNNING_SERVICES=$(docker-compose ps | grep "Up" | wc -l)
 

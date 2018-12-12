@@ -1,9 +1,16 @@
 #! /bin/bash
 # Script to check and wait until the NeoScan service is operational. 
 
-until $(curl --output /dev/null --silent --head --fail http://localhost:4000); do
+while [ "$(docker inspect --format '{{json .State.Health.Status }}' neo-scan-api)" != "\"healthy\"" ]
+  do
     printf '.'
     sleep 3
-done
+  done
+
+while [ "$(docker inspect --format '{{json .State.Health.Status }}' neo-local_autoheal)" != "\"healthy\"" ]
+  do
+    printf '.'
+    sleep 3
+  done
 
 printf "\n"
