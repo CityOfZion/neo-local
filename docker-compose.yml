@@ -26,37 +26,89 @@ services:
     container_name: neo-cli-privatenet-1
     environment:
       NODE_NUMBER: 1
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      test:
+        - CMD
+        - bash
+        - '-c'
+        - /opt/healthcheck-node.sh
+      timeout: 10s
     image: 'cityofzion/neo-local-privatenet:$NODE1_NEO_CLI_VERSION$BOOTSTRAP'
+    labels:
+      autoheal: 'true'
     ports:
       - '20333:20333'
       - '30333:30333'
+    restart: always
 
   neo-cli-privatenet-2:
     container_name: neo-cli-privatenet-2
     environment:
       NODE_NUMBER: 2
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      test:
+        - CMD
+        - bash
+        - '-c'
+        - /opt/healthcheck-node.sh
+      timeout: 10s
     image: 'cityofzion/neo-local-privatenet:$NODE2_NEO_CLI_VERSION$BOOTSTRAP'
+    labels:
+      autoheal: 'true'
     ports:
       - '20334:20334'
       - '30334:30334'
+    restart: always
 
   neo-cli-privatenet-3:
     container_name: neo-cli-privatenet-3
     environment:
       NODE_NUMBER: 3
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      test:
+        - CMD
+        - bash
+        - '-c'
+        - /opt/healthcheck-node.sh
+      timeout: 10s
     image: 'cityofzion/neo-local-privatenet:$NODE3_NEO_CLI_VERSION$BOOTSTRAP'
+    labels:
+      autoheal: 'true'
     ports:
       - '20335:20335'
       - '30335:30335'
+    restart: always
 
   neo-cli-privatenet-4:
     container_name: neo-cli-privatenet-4
     environment:
       NODE_NUMBER: 4
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      test:
+        - CMD
+        - bash
+        - '-c'
+        - /opt/healthcheck-node.sh
+      timeout: 10s
     image: 'cityofzion/neo-local-privatenet:$NODE4_NEO_CLI_VERSION$BOOTSTRAP'
+    labels:
+      autoheal: 'true'
     ports:
       - '20336:20336'
       - '30336:30336'
+    restart: always
 
   neo-faucet:
     container_name: neo-faucet

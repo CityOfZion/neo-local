@@ -73,7 +73,7 @@ echo
 ($DOCKER_CMD)
 
 echo "Cleaning up unnecessary packages"
-CLEAN_CMD="apt remove -y unzip wget curl git-core python3.6 python3.6-dev python3.6-venv python3-pip man vim"
+CLEAN_CMD="apt remove -y unzip wget git-core python3.6 python3.6-dev python3.6-venv python3-pip man vim"
 DOCKER_CMD="docker exec -it $CONTAINER ${CLEAN_CMD}"
 echo $DOCKER_CMD
 echo
