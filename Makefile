@@ -5,8 +5,8 @@ DEFAULT: start
 
 attach-to-neo-python-client:
 	@./scripts/print.sh prefix "Attaching terminal to neo-python client\n"
-	@./scripts/print.sh grey "Open wallet (password: 'coz'):\t open wallet ./neo-privnet.wallet"
-	@./scripts/print.sh grey "Test smart contract:\t\t build /smart-contracts/wake_up_neo.py test 07 05 True False main\n"
+	@./scripts/print.sh grey "Open wallet (password: 'coz'):\t wallet open neo-privnet.wallet"
+	@./scripts/print.sh grey "Test smart contract:\t\t sc build_run /smart-contracts/wake_up_neo.py True False False 07 05 main\n"
 	@docker exec -it neo-python np-prompt -p -v
 
 # IGNORE - used to check if version has been bumped on CI.

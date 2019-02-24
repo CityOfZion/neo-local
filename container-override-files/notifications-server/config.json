@@ -25,17 +25,22 @@
 		}
 	},
 	"ApplicationConfiguration": {
-		"AcceptIncomingPeers": false,
 		"DataDirectoryPath": "Chains/privnet",
 		"NotificationDataPath": "Chains/privnet_notif",
 		"RPCPort": 20332,
 		"NodePort": 20333,
 		"WsPort": 20334,
-		"UriPrefix": ["http://*:20332"],
+		"UriPrefix": [
+		  "http://*:20332"
+		],
 		"SslCert": "",
 		"SslCertPassword": "",
-		"BootstrapFile": "",
-		"NotificationBootstrapFile": "",
-		"DebugStorage": 1
+		"BootstrapName": "privnet",
+		"BootstrapFiles": "https://s3.us-east-2.amazonaws.com/cityofzion/bootstrap_latest",
+		"DebugStorage": 1,
+		"AcceptIncomingPeers": false,
+		"CompilerNep8": false,
+		"RestServer": "neo.api.REST.RestApi.RestApi",
+		"RPCServer": "neo.api.JSONRPC.JsonRpcApi.JsonRpcApi"
+	  }
 	}
-}
