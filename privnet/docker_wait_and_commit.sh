@@ -28,7 +28,7 @@ while [[ "$#" > 0 ]]; do case $2 in
         shift 2
         ;;
     --until-block)
-        SLEEP_TIME=10 # to prevent skipped blocks
+        SLEEP_TIME=1 # to prevent skipped blocks
         if [ -z $3 ]; then usage; exit 1; fi
         UNTIL_BLOCK=$3
         shift 3
@@ -88,6 +88,20 @@ echo
 
 echo "Cleaning up apt cache packages"
 CLEAN_CMD="rm -rf /var/lib/apt/lists/*"
+DOCKER_CMD="docker exec -it $CONTAINER ${CLEAN_CMD}"
+echo $DOCKER_CMD
+echo
+($DOCKER_CMD)
+
+echo "Cleaning bash history"
+CLEAN_CMD="rm /root/.bash_history"
+DOCKER_CMD="docker exec -it $CONTAINER ${CLEAN_CMD}"
+echo $DOCKER_CMD
+echo
+($DOCKER_CMD)
+
+echo "Cleaning pip cache"
+CLEAN_CMD="rm -fr /root/.cache"
 DOCKER_CMD="docker exec -it $CONTAINER ${CLEAN_CMD}"
 echo $DOCKER_CMD
 echo

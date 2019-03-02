@@ -140,7 +140,7 @@ neo-local/
 Inside that file you have a variable called BOOTSTRAP.<br>
 There are two possible values:<br>
 - `_genesis` means starting from block zero
-- `_4kBlocks` starts with 4000 blocks (default)
+- `_6kBlocks` starts with 6000 blocks (default)
 
 Note: A genesis chain doesn't have GAS claimed yet. You will need GAS to deploy smart-contracts.
 
