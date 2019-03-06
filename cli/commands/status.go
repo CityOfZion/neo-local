@@ -2,7 +2,6 @@ package commands
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"strings"
 
@@ -50,7 +49,11 @@ func (s Status) action() func(c *cli.Context) error {
 			return errors.New("Docker is not running")
 		}
 
-		services := stack.Services()
+		services, err := stack.Services()
+		if err != nil {
+			return err
+		}
+
 		runningContainers, err := cli.ContainerList(ctx, types.ContainerListOptions{})
 		if err != nil {
 			return err
@@ -59,8 +62,7 @@ func (s Status) action() func(c *cli.Context) error {
 		for _, container := range runningContainers {
 			containerName := ""
 			for _, name := range container.Names {
-				if strings.Contains(name, "coz_neo-local_") { // TODO: this string should be a const.
-					fmt.Println(name)
+				if strings.Contains(name, stack.ContainerNamePrefix) {
 					containerName = name
 					break
 				}
@@ -73,7 +75,7 @@ func (s Status) action() func(c *cli.Context) error {
 			for _, service := range services {
 				if strings.Contains(containerName, service.ContainerName()) {
 					log.Printf(
-						"%s in '%s' state", service.Image, container.State,
+						"%s in '%s' state", service.Name, container.State,
 					)
 					break
 				}

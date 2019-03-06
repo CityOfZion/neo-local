@@ -7,7 +7,6 @@ import (
 
 	"github.com/CityOfZion/neo-local/cli/services"
 	"github.com/CityOfZion/neo-local/cli/stack"
-	"github.com/fatih/color"
 	"github.com/urfave/cli"
 
 	"github.com/docker/docker/api/types"
@@ -38,21 +37,21 @@ func (s Start) ToCommand() cli.Command {
 
 func (s Start) action() func(c *cli.Context) error {
 	return func(c *cli.Context) error {
-		verbose := c.Bool("v")
-		if verbose {
-			log.Println("Verbose logging is enabled")
-		}
+		// verbose := c.Bool("v")
+		// if verbose {
+		// 	log.Println("Verbose logging is enabled")
+		// }
 
-		saveState := c.Bool("ss")
-		if saveState {
-			log.Println("Save state is enabled, existing environment will not be destroyed")
-		} else {
-			log.Printf(
-				"Save state is %s, existing environment will be %s",
-				color.RedString("disabled"),
-				color.RedString("destroyed"),
-			)
-		}
+		// saveState := c.Bool("ss")
+		// if saveState {
+		// 	log.Println("Save state is enabled, existing environment will not be destroyed")
+		// } else {
+		// 	log.Printf(
+		// 		"Save state is %s, existing environment will be %s",
+		// 		color.RedString("disabled"),
+		// 		color.RedString("destroyed"),
+		// 	)
+		// }
 
 		ctx := context.Background()
 		cli, err := client.NewEnvClient()
@@ -70,37 +69,93 @@ func (s Start) action() func(c *cli.Context) error {
 			return err
 		}
 
-		services := stack.Services()
+		serv, _ := stack.Services()
 
-		for _, service := range services {
-			resp, err := cli.ContainerCreate(
-				ctx, service.Config(), nil, nil, service.ContainerName(),
-			)
+		containerStarted := []string{}
+		loopLimit := 0
+		for len(containerStarted) < len(serv) {
 			if err != nil {
 				return err
 			}
 
-			err = cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{})
-			if err != nil {
-				return err
+			if loopLimit == 30 {
+				log.Printf("Infinite loop sanity triggered")
+				return errors.New("Possible wrong container dependencies")
 			}
 
-			log.Printf("Started %s", service.Image)
+		serviceIteration:
+			for _, service := range serv {
+
+				for _, c := range containerStarted {
+					if c == service.Name {
+						continue serviceIteration
+					}
+				}
+
+				if service.DependsOn != nil {
+					if sliceSubsetCheck(service.DependsOn, containerStarted) != true {
+						continue
+					}
+				}
+
+				resp, err := cli.ContainerCreate(
+					ctx,
+					service.Config(),
+					service.HostConfig,
+					nil,
+					service.ContainerName(),
+				)
+				if err != nil {
+					return err
+				}
+
+				err = cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{})
+				if err != nil {
+					return err
+				}
+				log.Printf("Started %s", service.Name)
+
+				containerStarted = append(containerStarted, service.Name)
+			}
+
+			loopLimit++
 		}
-
 		return nil
 	}
 }
 
 func (s Start) flags() []cli.Flag {
 	return []cli.Flag{
-		cli.BoolFlag{
-			Name:  "save-state, ss",
-			Usage: "Any state in the existing environment will be saved (default: false)",
-		},
-		cli.BoolFlag{
-			Name:  "verbose, v",
-			Usage: "Enable verbose logging (default: false)",
-		},
+		// cli.BoolFlag{
+		// 	Name:  "pull-images, pi",
+		// 	Usage: "Pull the latest Docker images (default: true)",
+		// },
+		// cli.BoolFlag{
+		// 	Name:  "save-state, ss",
+		// 	Usage: "Any state in the existing environment will be saved (default: false)",
+		// },
+		// cli.BoolFlag{
+		// 	Name:  "verbose, v",
+		// 	Usage: "Enable verbose logging (default: false)",
+		// },
 	}
+}
+
+func sliceSubsetCheck(first, second []string) bool {
+	set := make(map[string]int)
+	for _, value := range second {
+		set[value]++
+	}
+
+	for _, value := range first {
+		if count, found := set[value]; !found {
+			return false
+		} else if count < 1 {
+			return false
+		} else {
+			set[value] = count - 1
+		}
+	}
+
+	return true
 }

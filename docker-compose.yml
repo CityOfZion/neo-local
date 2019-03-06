@@ -1,10 +1,19 @@
 version: '3.4'
+networks:
+  host-exposed:
+    driver: bridge
+  inside:
+    internal: true
+
 services:
   autoheal:
     container_name: neo-local_autoheal
     depends_on:
       - neo-faucet
-      - neo-nodes
+      - neo-cli-privatenet-1
+      - neo-cli-privatenet-2
+      - neo-cli-privatenet-3
+      - neo-cli-privatenet-4
       - neo-python
       - neo-scan-api
       - neo-scan-sync
@@ -15,9 +24,111 @@ services:
       - AUTOHEAL_INTERVAL=5
       - DOCKER_SOCK=/var/run/docker.sock
     image: willfarrell/autoheal
+    networks:
+      - inside
     restart: always
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
+
+  neo-cli-privatenet-1:
+    container_name: neo-cli-privatenet-1
+    environment:
+      NODE_NUMBER: 1
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      test:
+        - CMD
+        - bash
+        - '-c'
+        - /opt/healthcheck-node.sh
+      timeout: 10s
+    image: 'cityofzion/neo-local-privatenet:$NODE1_NEO_CLI_VERSION$BOOTSTRAP'
+    networks:
+      - inside
+      - host-exposed
+    labels:
+      autoheal: 'true'
+    ports:
+      - '20333:20333'
+      - '30333:30333'
+    restart: always
+
+  neo-cli-privatenet-2:
+    container_name: neo-cli-privatenet-2
+    environment:
+      NODE_NUMBER: 2
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      test:
+        - CMD
+        - bash
+        - '-c'
+        - /opt/healthcheck-node.sh
+      timeout: 10s
+    image: 'cityofzion/neo-local-privatenet:$NODE2_NEO_CLI_VERSION$BOOTSTRAP'
+    networks:
+      - inside
+      - host-exposed
+    labels:
+      autoheal: 'true'
+    ports:
+      - '20334:20334'
+      - '30334:30334'
+    restart: always
+
+  neo-cli-privatenet-3:
+    container_name: neo-cli-privatenet-3
+    environment:
+      NODE_NUMBER: 3
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      test:
+        - CMD
+        - bash
+        - '-c'
+        - /opt/healthcheck-node.sh
+      timeout: 10s
+    image: 'cityofzion/neo-local-privatenet:$NODE3_NEO_CLI_VERSION$BOOTSTRAP'
+    networks:
+      - inside
+      - host-exposed
+    labels:
+      autoheal: 'true'
+    ports:
+      - '20335:20335'
+      - '30335:30335'
+    restart: always
+
+  neo-cli-privatenet-4:
+    container_name: neo-cli-privatenet-4
+    environment:
+      NODE_NUMBER: 4
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      test:
+        - CMD
+        - bash
+        - '-c'
+        - /opt/healthcheck-node.sh
+      timeout: 10s
+    image: 'cityofzion/neo-local-privatenet:$NODE4_NEO_CLI_VERSION$BOOTSTRAP'
+    networks:
+      - inside
+      - host-exposed
+    labels:
+      autoheal: 'true'
+    ports:
+      - '20336:20336'
+      - '30336:30336'
+    restart: always
 
   neo-faucet:
     container_name: neo-faucet
@@ -25,53 +136,65 @@ services:
       - neo-scan-api
     environment:
       NEOSCAN: 'neo-scan-api:4000'
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 20s
+      test:
+        - CMD
+        - bash
+        - '-c'
+        - exec 6<>/dev/tcp/127.0.0.1/4002
+      timeout: 10s
     image: 'cityofzion/neo-local-faucet:latest'
+    labels:
+      autoheal: 'true'
     links:
       - 'neo-scan-api:4000'
+    networks:
+      - inside
+      - host-exposed
     ports:
       - '4002:4002'
-
-  neo-nodes:
-    container_name: neo-nodes
-    image: 'cityofzion/neo-privatenet:2.7.6'
-    ports:
-      - '20333:20333'
-      - '20334:20334'
-      - '20335:20335'
-      - '20336:20336'
-      - '30333:30333'
-      - '30334:30334'
-      - '30335:30335'
-      - '30336:30336'
+    restart: always
 
   neo-python:
     container_name: neo-python
     depends_on:
-      - neo-nodes
+      - neo-cli-privatenet-1
+      - neo-cli-privatenet-2
+      - neo-cli-privatenet-3
+      - neo-cli-privatenet-4
       - neo-scan-api
       - neo-scan-sync
-    image: 'cityofzion/neo-python:v0.8.2'
-    network_mode: host
+    image: 'cityofzion/neo-python:v0.8.4'
+    networks:
+      - inside
+      - host-exposed
     tty: true
     volumes:
       - './smart-contracts:/smart-contracts'
       - './wallets:/wallets'
+      - >-
+        ./container-override-files/neo-python/protocol.privnet.json:/neo-python/neo/data/protocol.privnet.json
 
   neo-scan-api:
     container_name: neo-scan-api
     depends_on:
       - postgres
-      - neo-nodes
+      - neo-cli-privatenet-1
+      - neo-cli-privatenet-2
+      - neo-cli-privatenet-3
+      - neo-cli-privatenet-4
       - notifications-server
     environment:
       DB_DATABASE: neoscan_prodv
       DB_HOSTNAME: postgres
       DB_PASSWORD: postgres
       DB_USERNAME: postgres
-      HOST: '${HOST_NAME}'
       NEO_NOTIFICATIONS_SERVER: 'http://${NOTIFICATIONS_SERVER}:8080/v1'
       NEO_SEEDS: >-
-        http://${SEED_SERVER}:30333;http://${SEED_SERVER}:30334;http://${SEED_SERVER}:30335;http://${SEED_SERVER}:30336
+        http://neo-cli-privatenet-1:30333;http://neo-cli-privatenet-2:30334;http://neo-cli-privatenet-3:30335;http://neo-cli-privatenet-4:30336
       PORT: 4000
       REPLACE_OS_VARS: 'true'
     healthcheck:
@@ -88,10 +211,13 @@ services:
     labels:
       autoheal: 'true'
     links:
-      - 'neo-nodes:30333'
-      - 'neo-nodes:30334'
-      - 'neo-nodes:30335'
-      - 'neo-nodes:30336'
+      - 'neo-cli-privatenet-1:30333'
+      - 'neo-cli-privatenet-2:30334'
+      - 'neo-cli-privatenet-3:30335'
+      - 'neo-cli-privatenet-4:30336'
+    networks:
+      - inside
+      - host-exposed
     ports:
       - '4000:4000'
     restart: always
@@ -100,7 +226,10 @@ services:
     container_name: neo-scan-sync
     depends_on:
       - postgres
-      - neo-nodes
+      - neo-cli-privatenet-1
+      - neo-cli-privatenet-2
+      - neo-cli-privatenet-3
+      - neo-cli-privatenet-4
       - notifications-server
     environment:
       DB_DATABASE: neoscan_prodv
@@ -109,14 +238,16 @@ services:
       DB_USERNAME: postgres
       NEO_NOTIFICATIONS_SERVER: 'http://${NOTIFICATIONS_SERVER}:8080/v1'
       NEO_SEEDS: >-
-        http://${SEED_SERVER}:30333;http://${SEED_SERVER}:30334;http://${SEED_SERVER}:30335;http://${SEED_SERVER}:30336
+        http://neo-cli-privatenet-1:30333;http://neo-cli-privatenet-2:30334;http://neo-cli-privatenet-3:30335;http://neo-cli-privatenet-4:30336
       REPLACE_OS_VARS: 'true'
     image: 'registry.gitlab.com/cityofzion/neo-scan/sync:latest'
     links:
-      - 'neo-nodes:30333'
-      - 'neo-nodes:30334'
-      - 'neo-nodes:30335'
-      - 'neo-nodes:30336'
+      - 'neo-cli-privatenet-1:30333'
+      - 'neo-cli-privatenet-2:30334'
+      - 'neo-cli-privatenet-3:30335'
+      - 'neo-cli-privatenet-4:30336'
+    networks:
+      - inside
 
   notifications-server:
     command: >-
@@ -124,13 +255,33 @@ services:
       /neo-python/custom-config.json --port-rest 8080
     container_name: notifications-server
     depends_on:
-      - neo-nodes
-    image: 'cityofzion/neo-python:v0.8.2'
+      - neo-cli-privatenet-1
+      - neo-cli-privatenet-2
+      - neo-cli-privatenet-3
+      - neo-cli-privatenet-4
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      test:
+        - CMD
+        - bash
+        - '-c'
+        - exec 6<>/dev/tcp/127.0.0.1/8080
+      timeout: 10s
+    image: 'cityofzion/neo-python:v0.8.4'
+    labels:
+      autoheal: 'true'
+    networks:
+      - inside
+      - host-exposed
     ports:
       - '8080:8080'
+    restart: always
     volumes:
-      - './notifications-server.config.json:/neo-python/custom-config.json'
-
+      - >-
+        ./container-override-files/notifications-server/config.json:/neo-python/custom-config.json
+      
   postgres:
     container_name: postgres
     environment:
@@ -139,4 +290,6 @@ services:
       POSTGRES_USER: postgres
     expose:
       - 5432
-    image: 'postgres:10.5'
+    image: 'library/postgres:10.5'
+    networks:
+      - inside

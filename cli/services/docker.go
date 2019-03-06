@@ -1,10 +1,14 @@
 package services
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"log"
+	"strings"
 
 	"github.com/CityOfZion/neo-local/cli/logger"
+	"github.com/CityOfZion/neo-local/cli/stack"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"golang.org/x/net/context"
@@ -25,14 +29,35 @@ func CheckDockerRunning(ctx context.Context, cli *client.Client) bool {
 func PullDockerImages(ctx context.Context, cli *client.Client) error {
 	log.Println("Pulling Docker images")
 
-	for _, imageName := range dockerImageNames() {
-		prefix := fmt.Sprintf("↪  %s", imageName)
+	services, err := stack.Services()
+	if err != nil {
+		return err
+	}
+
+	for _, service := range services {
+		prefix := fmt.Sprintf("↪  %s", service.ImageName())
 		s := logger.NewSpinner(prefix)
 		s.Start()
 
-		reader, err := cli.ImagePull(ctx, imageName, types.ImagePullOptions{})
+		reader, err := cli.ImagePull(
+			ctx, service.ImageName(), types.ImagePullOptions{},
+		)
 		if err != nil {
-			return fmt.Errorf("Error when pulling Docker image '%s': %s", imageName, err)
+			return fmt.Errorf(
+				"Error when pulling Docker image '%s': %s",
+				service.ImageName(),
+				err,
+			)
+		}
+
+		var b bytes.Buffer
+		_, err = io.Copy(&b, reader)
+		if err != nil {
+			return fmt.Errorf(
+				"Error when pulling Docker image '%s': %s",
+				service.ImageName(),
+				err,
+			)
 		}
 
 		defer reader.Close()
@@ -42,13 +67,51 @@ func PullDockerImages(ctx context.Context, cli *client.Client) error {
 	return nil
 }
 
-func dockerImageNames() []string {
-	return []string{
-		"cityofzion/neo-local-faucet:latest",
-		"cityofzion/neo-privatenet:2.7.6",
-		"cityofzion/neo-python:v0.8.2",
-		"postgres:10.5",
-		"registry.gitlab.com/cityofzion/neo-scan/api:latest",
-		"registry.gitlab.com/cityofzion/neo-scan/sync:latest",
+// FetchContainerReferences finds the container ID for each service within the
+// stack.
+func FetchContainerReferences(ctx context.Context, cli *client.Client) (map[string]string, error) {
+	containerReferences := map[string]string{}
+
+	containerNames, err := stack.ServiceContainerNames()
+	if err != nil {
+		return nil, err
 	}
+
+	for _, containerName := range containerNames {
+		containerReferences[containerName] = ""
+	}
+
+	containers, err := cli.ContainerList(
+		ctx,
+		types.ContainerListOptions{
+			All: true,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, container := range containers {
+		var containerServiceName string
+		for _, name := range container.Names {
+			name = strings.Replace(name, "/", "", -1)
+			if strings.HasPrefix(name, stack.ContainerNamePrefix) {
+				containerServiceName = name
+				break
+			}
+		}
+
+		if containerServiceName == "" {
+			continue
+		}
+
+		for _, serviceName := range containerNames {
+			if containerServiceName == serviceName {
+				containerReferences[containerServiceName] = container.ID
+				break
+			}
+		}
+	}
+
+	return containerReferences, nil
 }

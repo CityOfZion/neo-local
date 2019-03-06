@@ -43,7 +43,7 @@ project from the [Truffle Framework](https://truffleframework.com/ganache).
 
 ## Documentation
 
-Please visit the [wiki](https://github.com/CityOfZion/neo-local/wiki) for 
+Please visit the [Documentation](documentation/) for 
 instructions on how to install and use the project.
 
 ![image](https://user-images.githubusercontent.com/2796074/36632958-9247f8ba-198d-11e8-8055-f096141902d9.png)
