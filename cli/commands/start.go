@@ -69,31 +69,57 @@ func (s Start) action() func(c *cli.Context) error {
 			return err
 		}
 
-		services, err := stack.Services()
-		if err != nil {
-			return err
-		}
+		serv, _ := stack.Services()
 
-		for _, service := range services {
-			resp, err := cli.ContainerCreate(
-				ctx,
-				service.Config(),
-				service.HostConfig,
-				nil,
-				service.ContainerName(),
-			)
+		containerStarted := []string{}
+		loopLimit := 0
+		for len(containerStarted) < len(serv) {
 			if err != nil {
 				return err
 			}
 
-			err = cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{})
-			if err != nil {
-				return err
+			if loopLimit == 30 {
+				log.Printf("Infinite loop sanity triggered")
+				return errors.New("Possible wrong container dependencies")
 			}
 
-			log.Printf("Started %s", service.Name)
-		}
+		serviceIteration:
+			for _, service := range serv {
 
+				for _, c := range containerStarted {
+					if c == service.Name {
+						continue serviceIteration
+					}
+				}
+
+				if service.DependsOn != nil {
+					if sliceSubsetCheck(service.DependsOn, containerStarted) != true {
+						continue
+					}
+				}
+
+				resp, err := cli.ContainerCreate(
+					ctx,
+					service.Config(),
+					service.HostConfig,
+					nil,
+					service.ContainerName(),
+				)
+				if err != nil {
+					return err
+				}
+
+				err = cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{})
+				if err != nil {
+					return err
+				}
+				log.Printf("Started %s", service.Name)
+
+				containerStarted = append(containerStarted, service.Name)
+			}
+
+			loopLimit++
+		}
 		return nil
 	}
 }
@@ -113,4 +139,23 @@ func (s Start) flags() []cli.Flag {
 		// 	Usage: "Enable verbose logging (default: false)",
 		// },
 	}
+}
+
+func sliceSubsetCheck(first, second []string) bool {
+	set := make(map[string]int)
+	for _, value := range second {
+		set[value]++
+	}
+
+	for _, value := range first {
+		if count, found := set[value]; !found {
+			return false
+		} else if count < 1 {
+			return false
+		} else {
+			set[value] = count - 1
+		}
+	}
+
+	return true
 }

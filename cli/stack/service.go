@@ -16,6 +16,7 @@ type (
 	Service struct {
 		Author          string
 		ContainerConfig *container.Config
+		DependsOn       []string
 		HostConfig      *container.HostConfig
 		Image           string
 		Name            string
