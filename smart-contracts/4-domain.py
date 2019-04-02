@@ -1,4 +1,6 @@
 """
+WARNING - DO NOT DEPLOY, IS CURRENTLY REJECTED BY CONSENSUS NODES
+
 Testing:
 
 neo> sc build_run /smart-contracts/4-domain.py True False False 0710 05 query ["test.com"]
@@ -6,7 +8,7 @@ neo> sc build_run /smart-contracts/4-domain.py True False False 0710 05 register
 neo> sc build_run /smart-contracts/4-domain.py True False False 0710 05 delete ["test.com"]
 neo> sc build_run /smart-contracts/4-domain.py True False False 0710 05 transfer ["test.com","AK2nJJpJr6o664CWJKi1QRXjqeic"]
 
-Importing:
+Importing (DO NOT DO THIS NOW):
 
 neo> sc deploy /smart-contracts/4-domain.avm True False False 0710 05
 neo> search contract ...

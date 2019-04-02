@@ -8,7 +8,7 @@ Debugstorage is enabled by default, you can disable it with
 `sc debugstorage reset`.
 
 Test & Build:
-neo> sc build_run 3-storage.py True False False 07 05
+neo> sc build_run /smart-contracts/3-storage.py True False False 07 05
 
 Invoke this multiple times to see an increasing value in storage. Reset with:
 

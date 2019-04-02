@@ -2,7 +2,7 @@
 In prompt.py, you need to execute `config sc-events on` to see the events showing up.
 
 Test & Build:
-neo> sc build_run 2-print-and-notify.py True False False 07 05
+neo> sc build_run /smart-contracts/2-print-and-notify.py True False False 07 05
 """
 from boa.interop.Neo.Runtime import Log, Notify
 
