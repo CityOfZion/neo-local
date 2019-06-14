@@ -15,8 +15,7 @@ services:
       - neo-cli-privatenet-3
       - neo-cli-privatenet-4
       - neo-python
-      - neo-scan-api
-      - neo-scan-sync
+      - neo-scan
       - postgres
     environment:
       - AUTOHEAL_CONTAINER_LABEL=autoheal
@@ -132,9 +131,9 @@ services:
   neo-faucet:
     container_name: neo-faucet
     depends_on:
-      - neo-scan-api
+      - neo-scan
     environment:
-      NEOSCAN: 'neo-scan-api:4000'
+      NEOSCAN: 'neo-scan:4000'
     healthcheck:
       interval: 30s
       retries: 3
@@ -149,7 +148,7 @@ services:
     labels:
       autoheal: 'true'
     links:
-      - 'neo-scan-api:4000'
+      - 'neo-scan:4000'
     networks:
       - inside
       - host-exposed
@@ -164,8 +163,7 @@ services:
       - neo-cli-privatenet-2
       - neo-cli-privatenet-3
       - neo-cli-privatenet-4
-      - neo-scan-api
-      - neo-scan-sync
+      - neo-scan
     image: 'cityofzion/neo-python:v0.8.4'
     networks:
       - inside
@@ -177,8 +175,8 @@ services:
       - >-
         ./container-override-files/neo-python/protocol.privnet.json:/neo-python/neo/data/protocol.privnet.json
 
-  neo-scan-api:
-    container_name: neo-scan-api
+  neo-scan:
+    container_name: neo-scan
     depends_on:
       - postgres
       - neo-cli-privatenet-1
@@ -204,7 +202,7 @@ services:
         - '-c'
         - exec 6<>/dev/tcp/127.0.0.1/4000
       timeout: 10s
-    image: 'registry.gitlab.com/cityofzion/neo-scan/api:latest'
+    image: 'cityofzion/neoscan:latest'
     labels:
       autoheal: 'true'
     links:
@@ -218,31 +216,6 @@ services:
     ports:
       - '4000:4000'
     restart: always
-
-  neo-scan-sync:
-    container_name: neo-scan-sync
-    depends_on:
-      - postgres
-      - neo-cli-privatenet-1
-      - neo-cli-privatenet-2
-      - neo-cli-privatenet-3
-      - neo-cli-privatenet-4
-    environment:
-      DB_DATABASE: neoscan_prodv
-      DB_HOSTNAME: postgres
-      DB_PASSWORD: postgres
-      DB_USERNAME: postgres
-      NEO_SEEDS: >-
-        http://neo-cli-privatenet-1:30333;http://neo-cli-privatenet-2:30334;http://neo-cli-privatenet-3:30335;http://neo-cli-privatenet-4:30336
-      REPLACE_OS_VARS: 'true'
-    image: 'registry.gitlab.com/cityofzion/neo-scan/sync:latest'
-    links:
-      - 'neo-cli-privatenet-1:30333'
-      - 'neo-cli-privatenet-2:30334'
-      - 'neo-cli-privatenet-3:30335'
-      - 'neo-cli-privatenet-4:30336'
-    networks:
-      - inside
 
   postgres:
     container_name: postgres

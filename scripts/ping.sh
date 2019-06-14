@@ -7,7 +7,7 @@ while [ "$(docker inspect --format '{{json .State.Health.Status }}' neo-local_au
     sleep 3
   done
 
-while [ "$(docker inspect --format '{{json .State.Health.Status }}' neo-scan-api)" != "\"healthy\"" ]
+while [ "$(docker inspect --format '{{json .State.Health.Status }}' neo-scan)" != "\"healthy\"" ]
   do
     printf '.'
     sleep 3

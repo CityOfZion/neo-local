@@ -51,7 +51,7 @@ Within the neo-local you'll find the following services:
 - [neo-local-faucet](https://github.com/CityOfZion/neo-local-faucet) (dev faucet)
 - [neo-cli](https://github.com/neo-project/neo-cli) (consensus nodes)
 - [neo-python](https://github.com/CityOfZion/neo-python) (development CLI)
-- [neo-scan-api](https://github.com/CityOfZion/neo-scan) (block explorer)
+- [](https://github.com/CityOfZion/neo-scan) (block explorer)
 - [neo-scan-sync](https://github.com/CityOfZion/neo-scan) (block explorer)
 - [postgres](https://hub.docker.com/_/postgres/) (database for neo-scan)
 
