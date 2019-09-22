@@ -11,13 +11,8 @@ services:
     depends_on:
       - neo-faucet
       - neo-cli-privatenet-1
-      - neo-cli-privatenet-2
-      - neo-cli-privatenet-3
-      - neo-cli-privatenet-4
       - neo-python
-      - neo-scan-api
-      - neo-scan-sync
-      - notifications-server
+      - neo-scan
       - postgres
     environment:
       - AUTOHEAL_CONTAINER_LABEL=autoheal
@@ -55,87 +50,14 @@ services:
       - '30333:30333'
     restart: always
 
-  neo-cli-privatenet-2:
-    container_name: neo-cli-privatenet-2
-    environment:
-      NODE_NUMBER: 2
-    healthcheck:
-      interval: 30s
-      retries: 3
-      start_period: 60s
-      test:
-        - CMD
-        - bash
-        - '-c'
-        - /opt/healthcheck-node.sh
-      timeout: 10s
-    image: 'cityofzion/neo-local-privatenet:$NODE2_NEO_CLI_VERSION$BOOTSTRAP'
-    networks:
-      - inside
-      - host-exposed
-    labels:
-      autoheal: 'true'
-    ports:
-      - '20334:20334'
-      - '30334:30334'
-    restart: always
-
-  neo-cli-privatenet-3:
-    container_name: neo-cli-privatenet-3
-    environment:
-      NODE_NUMBER: 3
-    healthcheck:
-      interval: 30s
-      retries: 3
-      start_period: 60s
-      test:
-        - CMD
-        - bash
-        - '-c'
-        - /opt/healthcheck-node.sh
-      timeout: 10s
-    image: 'cityofzion/neo-local-privatenet:$NODE3_NEO_CLI_VERSION$BOOTSTRAP'
-    networks:
-      - inside
-      - host-exposed
-    labels:
-      autoheal: 'true'
-    ports:
-      - '20335:20335'
-      - '30335:30335'
-    restart: always
-
-  neo-cli-privatenet-4:
-    container_name: neo-cli-privatenet-4
-    environment:
-      NODE_NUMBER: 4
-    healthcheck:
-      interval: 30s
-      retries: 3
-      start_period: 60s
-      test:
-        - CMD
-        - bash
-        - '-c'
-        - /opt/healthcheck-node.sh
-      timeout: 10s
-    image: 'cityofzion/neo-local-privatenet:$NODE4_NEO_CLI_VERSION$BOOTSTRAP'
-    networks:
-      - inside
-      - host-exposed
-    labels:
-      autoheal: 'true'
-    ports:
-      - '20336:20336'
-      - '30336:30336'
-    restart: always
-
   neo-faucet:
     container_name: neo-faucet
     depends_on:
-      - neo-scan-api
+      - neo-scan
     environment:
-      NEOSCAN: 'neo-scan-api:4000'
+      NEOSCAN: 'neo-scan:4000'
+      MIN_BLOCK: '1000'
+      GAS_REWARD: '1000s'
     healthcheck:
       interval: 30s
       retries: 3
@@ -150,23 +72,22 @@ services:
     labels:
       autoheal: 'true'
     links:
-      - 'neo-scan-api:4000'
+      - 'neo-scan:4000'
     networks:
       - inside
       - host-exposed
     ports:
       - '4002:4002'
+    volumes:
+      - >-
+        ./container-override-files/neo-faucet/protocol.json:/usr/src/app/assets/protocol.json
     restart: always
 
   neo-python:
     container_name: neo-python
     depends_on:
       - neo-cli-privatenet-1
-      - neo-cli-privatenet-2
-      - neo-cli-privatenet-3
-      - neo-cli-privatenet-4
-      - neo-scan-api
-      - neo-scan-sync
+      - neo-scan
     image: 'cityofzion/neo-python:v0.8.4'
     networks:
       - inside
@@ -178,23 +99,18 @@ services:
       - >-
         ./container-override-files/neo-python/protocol.privnet.json:/neo-python/neo/data/protocol.privnet.json
 
-  neo-scan-api:
-    container_name: neo-scan-api
+  neo-scan:
+    container_name: neo-scan
     depends_on:
       - postgres
       - neo-cli-privatenet-1
-      - neo-cli-privatenet-2
-      - neo-cli-privatenet-3
-      - neo-cli-privatenet-4
-      - notifications-server
     environment:
       DB_DATABASE: neoscan_prodv
       DB_HOSTNAME: postgres
       DB_PASSWORD: postgres
       DB_USERNAME: postgres
-      NEO_NOTIFICATIONS_SERVER: 'http://${NOTIFICATIONS_SERVER}:8080/v1'
       NEO_SEEDS: >-
-        http://neo-cli-privatenet-1:30333;http://neo-cli-privatenet-2:30334;http://neo-cli-privatenet-3:30335;http://neo-cli-privatenet-4:30336
+        http://neo-cli-privatenet-1:30333
       PORT: 4000
       REPLACE_OS_VARS: 'true'
     healthcheck:
@@ -207,14 +123,11 @@ services:
         - '-c'
         - exec 6<>/dev/tcp/127.0.0.1/4000
       timeout: 10s
-    image: 'registry.gitlab.com/cityofzion/neo-scan/api:latest'
+    image: 'cityofzion/neoscan:latest'
     labels:
       autoheal: 'true'
     links:
       - 'neo-cli-privatenet-1:30333'
-      - 'neo-cli-privatenet-2:30334'
-      - 'neo-cli-privatenet-3:30335'
-      - 'neo-cli-privatenet-4:30336'
     networks:
       - inside
       - host-exposed
@@ -222,66 +135,6 @@ services:
       - '4000:4000'
     restart: always
 
-  neo-scan-sync:
-    container_name: neo-scan-sync
-    depends_on:
-      - postgres
-      - neo-cli-privatenet-1
-      - neo-cli-privatenet-2
-      - neo-cli-privatenet-3
-      - neo-cli-privatenet-4
-      - notifications-server
-    environment:
-      DB_DATABASE: neoscan_prodv
-      DB_HOSTNAME: postgres
-      DB_PASSWORD: postgres
-      DB_USERNAME: postgres
-      NEO_NOTIFICATIONS_SERVER: 'http://${NOTIFICATIONS_SERVER}:8080/v1'
-      NEO_SEEDS: >-
-        http://neo-cli-privatenet-1:30333;http://neo-cli-privatenet-2:30334;http://neo-cli-privatenet-3:30335;http://neo-cli-privatenet-4:30336
-      REPLACE_OS_VARS: 'true'
-    image: 'registry.gitlab.com/cityofzion/neo-scan/sync:latest'
-    links:
-      - 'neo-cli-privatenet-1:30333'
-      - 'neo-cli-privatenet-2:30334'
-      - 'neo-cli-privatenet-3:30335'
-      - 'neo-cli-privatenet-4:30336'
-    networks:
-      - inside
-
-  notifications-server:
-    command: >-
-      /usr/bin/python3 /neo-python/neo/bin/api_server.py --config
-      /neo-python/custom-config.json --port-rest 8080
-    container_name: notifications-server
-    depends_on:
-      - neo-cli-privatenet-1
-      - neo-cli-privatenet-2
-      - neo-cli-privatenet-3
-      - neo-cli-privatenet-4
-    healthcheck:
-      interval: 30s
-      retries: 3
-      start_period: 10s
-      test:
-        - CMD
-        - bash
-        - '-c'
-        - exec 6<>/dev/tcp/127.0.0.1/8080
-      timeout: 10s
-    image: 'cityofzion/neo-python:v0.8.4'
-    labels:
-      autoheal: 'true'
-    networks:
-      - inside
-      - host-exposed
-    ports:
-      - '8080:8080'
-    restart: always
-    volumes:
-      - >-
-        ./container-override-files/notifications-server/config.json:/neo-python/custom-config.json
-      
   postgres:
     container_name: postgres
     environment:
@@ -290,6 +143,7 @@ services:
       POSTGRES_USER: postgres
     expose:
       - 5432
-    image: 'library/postgres:10.5'
+    image: 'library/postgres:12-alpine'
     networks:
       - inside
+    restart: always

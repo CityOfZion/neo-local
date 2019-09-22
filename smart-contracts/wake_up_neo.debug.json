@@ -1,0 +1,25 @@
+{
+    "avm": {
+        "name": "wake_up_neo",
+        "hash": "f054ab2a72f80e7e81b4f46fbf285cfc"
+    },
+    "compiler": {
+        "name": "neo-boa",
+        "version": "0.5.6"
+    },
+    "files": [
+        {
+            "id": 1,
+            "url": "/smart-contracts/wake_up_neo.py"
+        }
+    ],
+    "map": [
+        {
+            "start": 3,
+            "end": 38,
+            "file": 1,
+            "line": 2
+        }
+    ],
+    "breakpoints": []
+}

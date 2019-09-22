@@ -1,0 +1,42 @@
+{
+	"ProtocolConfiguration": {
+		"Magic": 56753,
+		"AddressVersion": 23,
+		"SecondsPerBlock": 1,
+		"LowPriorityThreshold": 0.001,
+		"StandbyValidators": [
+			"02b3622bf4017bdfe317c58aed5f4c753f206b7db896046fa7d774bbc4bf7f8dc2"
+		],
+		"SeedList": [
+			"127.0.0.1:20333"
+		],
+		"RPCList": [
+			"http://127.0.0.1:30333"
+		],
+		"SystemFee": {
+			"EnrollmentTransaction": 1000,
+			"IssueTransaction": 500,
+			"PublishTransaction": 500,
+			"RegisterTransaction": 10000
+		}
+	},
+	"ApplicationConfiguration": {
+		"DataDirectoryPath": "Chains/privnet",
+		"NotificationDataPath": "Chains/privnet_notif",
+		"RPCPort": 40332,
+		"NodePort": 40333,
+		"WsPort": 40334,
+		"UriPrefix": [
+			"http://*:40332"
+		],
+		"SslCert": "",
+		"SslCertPassword": "",
+		"BootstrapName": "privnet",
+		"BootstrapFiles": "https://s3.us-east-2.amazonaws.com/cityofzion/bootstrap_latest",
+		"DebugStorage": 1,
+		"AcceptIncomingPeers": false,
+		"CompilerNep8": false,
+		"RestServer": "neo.api.REST.RestApi.RestApi",
+		"RPCServer": "neo.api.JSONRPC.JsonRpcApi.JsonRpcApi"
+	}
+}

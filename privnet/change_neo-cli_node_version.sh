@@ -11,8 +11,10 @@ docker exec -it $CONTAINER bash -c 'apt-get install wget unzip -y'
 docker exec -it $CONTAINER bash -c 'mv /opt/node/neo-cli/ /opt/node/neo-cli_old'
 docker exec -it $CONTAINER bash -c "wget -O /opt/neo-cli.zip https://github.com/neo-project/neo-cli/releases/download/v$NEO_CLI_VERSION/neo-cli-linux-x64.zip || echo \"Error downloading neo-cli\" && exit"
 docker exec -it $CONTAINER bash -c 'unzip -q -d /opt/node /opt/neo-cli.zip'
-docker exec -it $CONTAINER bash -c "wget -O /opt/SimplePolicy.zip https://github.com/neo-project/neo-plugins/releases/download/v2.9.3/SimplePolicy.zip || echo \"Error downloading neo-plugins\" && exit"
+docker exec -it $CONTAINER bash -c "wget -O /opt/SimplePolicy.zip https://github.com/neo-project/neo-plugins/releases/download/v$NEO_CLI_VERSION/SimplePolicy.zip || echo \"Error downloading neo-plugins\" && exit"
 docker exec -it $CONTAINER bash -c 'unzip -q -d /opt/node/neo-cli /opt/SimplePolicy.zip'
+docker exec -it $CONTAINER bash -c "wget -O /opt/ApplicationLogs.zip https://github.com/neo-project/neo-plugins/releases/download/v$NEO_CLI_VERSION/ApplicationLogs.zip || echo \"Error downloading neo-plugins\" && exit"
+docker exec -it $CONTAINER bash -c 'unzip -q -d /opt/node/neo-cli /opt/ApplicationLogs.zip'
 docker exec -it $CONTAINER bash -c 'rm -fr /opt/node/neo-cli/Index_0000DDB1'
 docker exec -it $CONTAINER bash -c 'rm -fr /opt/node/neo-cli/Chain_0000DDB1'
 docker exec -it $CONTAINER bash -c 'cp /opt/node/neo-cli_old/wallet*.json /opt/node/neo-cli/'

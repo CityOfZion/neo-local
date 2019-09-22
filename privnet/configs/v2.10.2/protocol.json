@@ -1,0 +1,20 @@
+{
+    "ProtocolConfiguration": {
+        "Magic": 56753,
+        "AddressVersion": 23,
+        "SecondsPerBlock": 4,
+        "LowPriorityThreshold": 0.001,
+        "StandbyValidators": [
+            "02b3622bf4017bdfe317c58aed5f4c753f206b7db896046fa7d774bbc4bf7f8dc2",
+        ],
+        "SeedList": [
+            "neo-cli-privatenet-1:20333",
+        ],
+        "SystemFee": {
+            "EnrollmentTransaction": 1000,
+            "IssueTransaction": 500,
+            "PublishTransaction": 500,
+            "RegisterTransaction": 10000
+        }
+    }
+}

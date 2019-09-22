@@ -33,15 +33,19 @@ Fast and easy to start from the ground:
 - Download the latest version of [neo-local](https://github.com/CityOfZion/neo-local/archive/master.zip)
     - or clone the repo: `git clone https://github.com/CityOfZion/neo-local.git`
 - Move to the folder neo-local
-- Start all with the command `make start`
+- Start all with the command `make start` on linux/Mac and `docker-compose up` on Windows
 - Wait some seconds and you will have neo-python prompt available
 - You can also start your browser and go to [neo-local-faucet](http://localhost:4002) and claim some NEO and GAS to a wallet
 
 That will make a private NEO blockchain just for you to develop your dApp or smart-contract
 
-To stop neo-local, exit from neo-python prompt and do the following command:
+To stop neo-local, exit from neo-python prompt and do the following command (Linux/Mac):
 ```
 make stop
+```
+or on Windows
+```
+docker-compose down
 ```
 
 ## What's included
@@ -49,9 +53,9 @@ make stop
 Within the neo-local you'll find the following services:
 
 - [neo-local-faucet](https://github.com/CityOfZion/neo-local-faucet) (dev faucet)
-- [neo-cli](https://github.com/neo-project/neo-cli) (consensus nodes)
+- [neo-cli](https://github.com/neo-project/neo-cli) (block producer node)
 - [neo-python](https://github.com/CityOfZion/neo-python) (development CLI)
-- [neo-scan-api](https://github.com/CityOfZion/neo-scan) (block explorer)
+- [](https://github.com/CityOfZion/neo-scan) (block explorer)
 - [neo-scan-sync](https://github.com/CityOfZion/neo-scan) (block explorer)
 - [postgres](https://hub.docker.com/_/postgres/) (database for neo-scan)
 
@@ -60,8 +64,8 @@ Within the neo-local you'll find the following services:
 ## Usage
 
 After running neo-local (see [Quick start](#quick-start)) you will land in the neo-python prompt.<br>
-Consensus nodes are available on `localhost` ports `20333`, `20334`, `20335` and `20336`.<br>
-Or by RPC on `localhost` ports `30333`, `30334`, `30335` and `30336`.
+Block producer node is available on `localhost` port `20333`.<br>
+Or by RPC on `localhost` port `30333`.
 
 There are also two folders shared with the neo-python running container. Everything you put there is available to be used inside the container.
 ```
@@ -72,10 +76,10 @@ neo-local/
 
 ## Customizing
 
-Four neo-cli consensus nodes are started as block producers. The version of those nodes can be customized by you.
-You can start neo-local with a different or even all different versions at the same time.
+Only one neo-cli node is started as block producer. The version of that node can be customized by you.
+You should check what versions are supported. That information is shown in a commented line inside the ".env" file.
 
-To change the default versions you just need to edit the ".env" file
+To change the default version you just need to edit the ".env" file
 ```
 neo-local/
 ├── .env
@@ -83,18 +87,15 @@ neo-local/
 and change the variables above
 ```
 # neo-cli version
-# Other supported versions: 2.9.0, 2.8.0, 2.7.6.1
-NODE1_NEO_CLI_VERSION=2.8.0
-NODE2_NEO_CLI_VERSION=2.7.6.1
-NODE3_NEO_CLI_VERSION=2.8.0
-NODE4_NEO_CLI_VERSION=2.9.0
+# Other supported versions: 2.10.2
+NODE1_NEO_CLI_VERSION=2.10.2
 ```
 
 ## Tricks and tweaks
 
 ### Monitoring your nodes
 
-If you want to monitor your consensus nodes, you can use this little script that makes two RPC calls querying the version of the node and the blockcount. It will keep looping and showing you the results in a table.
+If you want to monitor your node, you can use this little script that makes two RPC calls querying the version of the node and the blockcount. It will keep looping and showing you the results in a table.
 ```
 neo-local/
 ├── privnet/
@@ -116,14 +117,14 @@ neo-local/
 ```
 The script accepts 2 arguments:
 
-- The first is the name of the node container. There are four container names.<br>
-Example: `neo-cli-privatenet-1` (that goes from 1 to 4 numbers)
+- The first argument is the name of the node container.<br>
+Example: `neo-cli-privatenet-1`
 
 - The second argument is the version of the neo-cli desired to be installed
 
 This is a possible example:
 ```
-./privnet/change_neo-cli_node_version.sh neo-cli-privatenet-3 2.9.0
+./privnet/change_neo-cli_node_version.sh neo-cli-privatenet-1 2.10.2
 ```
 Note: This works for upgrading or downgrading the version.
 
@@ -140,7 +141,7 @@ neo-local/
 Inside that file you have a variable called BOOTSTRAP.<br>
 There are two possible values:<br>
 - `_genesis` means starting from block zero
-- `_6kBlocks` starts with 6000 blocks (default)
+- `_1600kBlocks` starts with 1600 blocks (default)
 
 Note: A genesis chain doesn't have GAS claimed yet. You will need GAS to deploy smart-contracts.
 
