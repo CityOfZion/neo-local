@@ -241,6 +241,7 @@ class PrivnetClaimall(object):
             return True
 
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     # parser.add_argument("-o", "--output", action="store", help="Filename of wallet that will be created (default: %s)" % WALLET_PATH, default=WALLET_PATH)

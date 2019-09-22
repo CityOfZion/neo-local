@@ -10,6 +10,7 @@ services:
     container_name: neo-local_autoheal
     depends_on:
       - neo-faucet
+      - neo-cli-privatenet-1
       - neo-python
       - neo-scan
       - postgres
@@ -28,10 +29,22 @@ services:
     container_name: neo-cli-privatenet-1
     environment:
       NODE_NUMBER: 1
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      test:
+        - CMD
+        - bash
+        - '-c'
+        - /opt/healthcheck-node.sh
+      timeout: 10s
     image: 'cityofzion/neo-local-privatenet:$NODE1_NEO_CLI_VERSION$BOOTSTRAP'
     networks:
       - inside
       - host-exposed
+    labels:
+      autoheal: 'true'
     ports:
       - '20333:20333'
       - '30333:30333'
