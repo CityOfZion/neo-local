@@ -2,7 +2,7 @@
 FROM microsoft/dotnet:2.1.4-runtime-bionic
 
 LABEL maintainer="City of Zion"
-LABEL authors="original authors metachris, ashant, hal0x2328, phetter"
+LABEL authors="Maintainer Nuno Justo. Original authors metachris, ashant, hal0x2328, phetter"
 
 # arguments to choose version of neo-cli to install (defaults to 2.8.0)
 ARG NEO_CLI_VERSION="2.8.0"

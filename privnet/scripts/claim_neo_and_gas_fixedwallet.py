@@ -51,6 +51,7 @@ from neo.SmartContract.Contract import Contract
 from neo.Network.NodeLeader import NodeLeader
 from twisted.internet import reactor, task
 from neo.Settings import settings
+
 from mock import patch
 
 WALLET_PATH = "/tmp/privnet1"
@@ -61,11 +62,11 @@ MINUTES_TO_WAIT_UNTIL_GAS_CLAIM = 1
 # configuration, you'll need to add all your node keys and multi-sig address in place of the ones below
 
 multisig_addr = 'AZ81H31DMWzbSnFDLFkzh9vHwaDLayV7fU'
-nodekeys = {'02b3622bf4017bdfe317c58aed5f4c753f206b7db896046fa7d774bbc4bf7f8dc2': 'KxyjQ8eUa4FHt3Gvioyt1Wz29cTUrE4eTqX3yFSk1YFCsPL8uNsY',
-            '02103a7f7dd016558597f7960d27c516a4394fd968b9e65155eb4b013e4040406e': 'KzfPUYDC9n2yf4fK5ro4C8KMcdeXtFuEnStycbZgX3GomiUsvX6W',
-            '03d90c07df63e690ce77912e10ab51acc944b66860237b608c4f8f8309e71ee699': 'L2oEXKRAAMiPEZukwR5ho2S6SMeQLhcK9mF71ZnF7GvT8dU4Kkgz',
-            '02a7bc55fe8684e0119768d104ba30795bdcc86619e864add26156723ed185cd62': 'KzgWE3u3EDp13XPXXuTKZxeJ3Gi8Bsm8f9ijY3ZsCKKRvZUo1Cdn'}
+pubkey='02b3622bf4017bdfe317c58aed5f4c753f206b7db896046fa7d774bbc4bf7f8dc2'
+wif='KxyjQ8eUa4FHt3Gvioyt1Wz29cTUrE4eTqX3yFSk1YFCsPL8uNsY'
+nodekeys = {pubkey: wif}
 
+to_address='AK2nJJpJr6o664CWJKi1QRXjqeic2zRp8y'
 
 class PrivnetClaimall(object):
     start_height = None
@@ -119,7 +120,7 @@ class PrivnetClaimall(object):
         context = ContractParametersContext(tx, isMultiSig=True)
         wallet.Sign(context)
 
-        if context.Completed:
+        if context.Completed == False:
             raise Exception("Something went wrong, multi-sig transaction failed")
 
         else:
@@ -192,94 +193,52 @@ class PrivnetClaimall(object):
             time.sleep(1)
 
         # Claim initial NEO
-        address = "AK2nJJpJr6o664CWJKi1QRXjqeic2zRp8y"
-        self.claim_initial_neo(address)
-
-        # Open wallet again
-        print("Opening wallet %s" % self.wallet_fn)
-        self.wallet = UserWallet.Open(self.wallet_fn, to_aes_key("coz"))
-        self.wallet.ProcessBlocks()
-        self._walletdb_loop = task.LoopingCall(self.wallet.ProcessBlocks)
-        self._walletdb_loop.start(1)
-        # self.wallet.Rebuild()
-        # print("\nOpened wallet. Rebuilding...")
-        # time.sleep(10)
-
-        print("\nWait %s min before claiming GAS." % self.min_wait)
-        time.sleep(60 * self.min_wait)
-
-        print("\nSending NEO to own wallet...")
-        with patch('neo.Prompt.Commands.Send.prompt', side_effect=["coz"]):
-            framework = construct_send_basic(self.wallet, ["neo", address, "100000000"])
-            tx = process_transaction(self.wallet, contract_tx=framework[0], scripthash_from=framework[1], fee=framework[2], owners=framework[3], user_tx_attributes=framework[4])
-
-        if not tx:
-            print("Something went wrong, no tx.")
-            return
-
-        # Wait until transaction is on blockchain
-        self.wait_for_tx(tx)
-
-        print("Claiming the GAS...")
-        claim_tx, relayed = ClaimGas(self.wallet, require_password=False)
-        self.wait_for_tx(claim_tx)
-
-        # Finally, need to rebuild the wallet
-        self.wallet.Rebuild()
-
-        print("\nAll done!")
-        print("- Wallet file: %s" % self.wallet_fn)
-        print("- Wallet pwd: %s" % self.wallet_pwd)
-
-        if self.wif_fn:
-            with open(self.wif_fn, "w") as f:
-                f.write("KxDgvEKzgSBPPfuVfw67oPQBSjidEiqTHURKSDL1R7yGaGYAeYnr")
-
+        self.claim_initial_neo(to_address)
         self.quit()
 
     def claim_initial_neo(self, target_address):
+        '''
+        claim all initial neo to a target_address
+        '''
         wallets = []
-        i = 0
         tx_json = None
         dbloops = []
 
-        print("Signing new transaction with 3 of 4 node keys...")
-        for pkey, wif in nodekeys.items():
-            walletpath = "wallet{}.db3".format(i + 1)
-            if os.path.exists(walletpath):
-                os.remove(walletpath)
-            wallet = UserWallet.Create(path=walletpath, password=to_aes_key(self.wallet_pwd))
-            wallets.append(wallet)
+        print("Signing new transaction with 1 of 1 node keys...")
 
-            print("Importing node private key to to {}".format(walletpath))
-            prikey = KeyPair.PrivateKeyFromWIF(wif)
-            wallet.CreateKey(prikey)
+        walletpath = "wallet1.db3"
+        if os.path.exists(walletpath):
+            os.remove(walletpath)
+        wallet = UserWallet.Create(path=walletpath, password=to_aes_key(self.wallet_pwd))
+        wallets.append(wallet)
 
-            print("Importing multi-sig contract to {}".format(walletpath))
-            keys = list(nodekeys.keys())
-            pubkey_script_hash = Crypto.ToScriptHash(pkey, unhex=True)
-            verification_contract = Contract.CreateMultiSigContract(pubkey_script_hash, 3, keys)
-            wallet.AddContract(verification_contract)
-            print("Added multi-sig contract address %s to wallet" % verification_contract.Address)
+        print("Importing node private key to to {}".format(walletpath))
+        prikey = KeyPair.PrivateKeyFromWIF(wif)
 
-            dbloop = task.LoopingCall(wallet.ProcessBlocks)
-            dbloop.start(1)
-            dbloops.append(dbloop)
+        wallet.CreateKey(prikey)
+        keys = list(nodekeys.keys())
+        print("Importing multi-sig contract to {}".format(walletpath))
+        pubkey_script_hash = Crypto.ToScriptHash(pubkey, unhex=True)
+        verification_contract = Contract.CreateMultiSigContract(pubkey_script_hash, 1, keys)
+        wallet.AddContract(verification_contract)
+        print("Added multi-sig contract address %s to wallet" % verification_contract.Address)
 
-            # print("Wallet %s " % json.dumps(wallet.ToJson(), indent=4))
+        dbloop = task.LoopingCall(wallet.ProcessBlocks)
+        dbloop.start(1)
+        dbloops.append(dbloop)
 
-            if i == 0:
-                print("Creating spend transaction to {}".format(target_address))
-                tx_json = self.send_neo(wallet, multisig_addr, target_address, '100000000')
-                if tx_json is None:
-                    break
-            else:
-                tx_json = self.sign_and_finish(wallet, tx_json)
+        # print("Wallet %s " % json.dumps(wallet.ToJson(), indent=4))
 
-            if tx_json == 'success':
-                print("Finished, {} should now own all the NEO on the private network.".format(target_address))
-                break
-            i += 1
+       
+        print("Creating spend transaction to {}".format(target_address))
+        tx_json = self.send_neo(wallet, verification_contract.Address, target_address, '100000000')
+        if tx_json is None:
+            return False
+           
+        relayResult = self.sign_and_finish(wallet, tx_json)
+        if relayResult == 'success':
+            print("Finished, {} should now own all the NEO on the private network.".format(target_address))
+            return True
 
 
 if __name__ == "__main__":
@@ -290,7 +249,7 @@ if __name__ == "__main__":
     # parser.add_argument("-w", "--save-privnet-wif", action="store", help="Filename to store created privnet wif key")
     args = parser.parse_args()
 
-    settings.setup_privnet()
+    settings.setup("protocol.solo.json")
     print("Blockchain DB path:", settings.chain_leveldb_path)
     if os.path.exists(settings.chain_leveldb_path):
         print("Warning: Chain database already exists. If this is from a previous private network, you need to delete %s" % settings.chain_leveldb_path)
